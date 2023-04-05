@@ -1,0 +1,20 @@
+{
+  "name": "8-bit-cpu-emulator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "emulator.js",
+  "scripts": {
+    "start": "node emulator.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/addamichal/8-bit-cpu-emulator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/addamichal/8-bit-cpu-emulator/issues"
+  },
+  "homepage": "https://github.com/addamichal/8-bit-cpu-emulator#readme"
+}

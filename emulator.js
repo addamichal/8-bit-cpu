@@ -1,17 +1,20 @@
-// instructions
-// 0000 - nop
-// 0001 - lda
-// 0010 - add
-// 0011 - sub
-// 0100 - sta
-// 0101 - ldi
-// 0110 - jmp
-// 0111 - jc
-// 1000 - jz
-// 1110 - out
-// 1111 - hlt
+const instructions = {
+    NOP: 0,     // 0000
+    LDA: 1,     // 0001
+    ADD: 2,     // 0010
+    SUB: 3,     // 0011
+    STA: 4,     // 0100
+    LDI: 5,     // 0101
+    JMP: 6,     // 0110
+    JC: 7,      // 0111
+    JZ: 8,      // 1000
+    OUT: 14,    // 1110
+    HLT: 15,     // 1111
 
-// opcodes
+    getInstructionName(value) {
+        return Object.keys(this).filter(key => this[key] === value)[0];
+    }
+}
 
 let counter = 0;
 let aRegister = 0;
@@ -37,16 +40,17 @@ ram[7] = 0x4e;
 ram[8] = 0xe0;
 ram[9] = 0x1f;
 ram[10] = 0x2e;
-ram[11] = 0x70; // to loop
-// ram[11] = 0x7d;
+// ram[11] = 0x70; // to loop
+ram[11] = 0x7d;
 ram[12] = 0x63;
 ram[13] = 0xf0;
 ram[14] = 0x00;
 ram[15] = 0x00;
 
-for (let i = 0; i < 200; i++) {
+while (true) {
+    // for (let i = 0; i < 100; i++) {
     //console.log('counter: ', counter);
-    
+
     let bus = ram[counter];
     let instruction = bus >> 4;
 
@@ -57,74 +61,74 @@ for (let i = 0; i < 200; i++) {
     }
 
     let value = bus & 15;
-    // console.log(instruction, value);
+
+    //console.log({ instruction: instructions.getInstructionName(instruction), value });
 
     //console.log('bus: ', bus);
     //console.log('aRegister: ', aRegister);
     //console.log('bRegister: ', bRegister);
     //console.log('');
 
-    if (instruction == 1) {
-        aRegister = ram[value];
-    }
+    switch (instruction) {
+        case instructions.LDA:
+            aRegister = ram[value];
+            break;
+        case instructions.ADD:
+            bRegister = ram[value];
+            sumRegister = aRegister + bRegister;
 
-    if (instruction == 2) {
-        bRegister = ram[value];
-        sumRegister = aRegister + bRegister;
+            if (sumRegister >= 255) {
+                sumRegister -= 256;
+                carryFlag = 1;
+            } else {
+                carryFlag = 0;
+            }
 
-        if (sumRegister >= 255) {
-            sumRegister -= 256;
-            carryFlag = 1;
-        } else {
-            carryFlag = 0;
-        }
+            zeroFlag = sumRegister == 0;
+            aRegister = sumRegister;
+            break;
+        case instructions.SUB:
+            bRegister = ram[value];
+            sumRegister = aRegister - bRegister;
 
-        zeroFlag = sumRegister == 0;
-        aRegister = sumRegister;
-    }
+            if (sumRegister < 0) {
+                sumRegister += 256;
+                carryFlag = 1;
+            } else {
+                carryFlag = 0;
+            }
 
-    if (instruction == 3) {
-        bRegister = ram[value];
-        sumRegister = aRegister - bRegister;
-
-        if (sumRegister < 0) {
-            sumRegister += 256;
-            carryFlag = 1;
-        } else {
-            carryFlag = 0;
-        }
-
-        zeroFlag = sumRegister == 0;
-        aRegister = sumRegister;
-    }
-
-    if (instruction == 4) {
-        ram[value] = aRegister;
-    }
-
-    if (instruction == 5) {
-        let val = bus & 15;
-        aRegister = val;
-    }
-
-    if (instruction == 6) {
-        counter = value;
-    }
-
-    if (instruction == 7 && carryFlag) {
-        counter = value;
-    }
-
-    if (instruction == 8 && zeroFlag) {
-        counter = value;
-    }
-
-    if (instruction == 14) {
-        console.log('OUT ', aRegister);
-    }
-
-    if (instruction == 15) {
-        console.log('HLT');
-        break;
+            zeroFlag = sumRegister == 0;
+            aRegister = sumRegister;
+            break;
+        case instructions.STA:
+            ram[value] = aRegister;
+            break;
+        case instructions.LDI:
+            let val = bus & 15;
+            aRegister = val;
+            break;
+        case instructions.JMP:
+            counter = value;
+            break;
+        case instructions.JC:
+            if (carryFlag) {
+                counter = value;
+            }
+            break;
+        case instructions.JZ:
+            if (zeroFlag) {
+                counter = value;
+            }
+            break;
+        case instructions.OUT:
+            console.log('OUT ', aRegister);
+            break;
+        case instructions.HLT:
+            console.log('HLT');
+            return;
+        default:
+            //throw new Error('Unknown instruction: ' + instruction);
+            console.log('uknown instruction: ' + instruction)
     }
 }
