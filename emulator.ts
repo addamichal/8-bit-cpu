@@ -1,3 +1,10 @@
+// TODO rewrite to typescript
+// TODO rewrite to functional style
+// TODO add tests
+// TODO rewrite using opcodes
+// TODO add instruction parser
+// TODO add UI
+
 const instructions = {
     NOP: 0,     // 0000
     LDA: 1,     // 0001
@@ -11,11 +18,12 @@ const instructions = {
     OUT: 14,    // 1110
     HLT: 15,     // 1111
 
-    getInstructionName(value) {
-        return Object.keys(this).filter(key => this[key] === value)[0];
+    getInstructionName(value: number): string {
+        return Object.keys(this).filter(key => this[key as keyof typeof instructions] === value)[0];
     }
 }
 
+let halted = false;
 let counter = 0;
 let aRegister = 0;
 let bRegister = 0;
@@ -23,7 +31,7 @@ let sumRegister = 0;
 let carryFlag = 0;
 let zeroFlag = 0;
 
-let ram = [];
+let ram: number[] = [];
 
 for (let i = 0; i < 16; i++) {
     ram[i] = 0;
@@ -47,7 +55,7 @@ ram[13] = 0xf0;
 ram[14] = 0x00;
 ram[15] = 0x00;
 
-while (true) {
+while (!halted) {
     // for (let i = 0; i < 100; i++) {
     //console.log('counter: ', counter);
 
@@ -84,7 +92,7 @@ while (true) {
                 carryFlag = 0;
             }
 
-            zeroFlag = sumRegister == 0;
+            zeroFlag = sumRegister === 0 ? 1 : 0;
             aRegister = sumRegister;
             break;
         case instructions.SUB:
@@ -98,7 +106,7 @@ while (true) {
                 carryFlag = 0;
             }
 
-            zeroFlag = sumRegister == 0;
+            zeroFlag = sumRegister === 0 ? 1 : 0;
             aRegister = sumRegister;
             break;
         case instructions.STA:
@@ -126,7 +134,8 @@ while (true) {
             break;
         case instructions.HLT:
             console.log('HLT');
-            return;
+            halted = true;
+            break;
         default:
             //throw new Error('Unknown instruction: ' + instruction);
             console.log('uknown instruction: ' + instruction)
