@@ -67,88 +67,86 @@ state.ram[14] = 0x00;
 state.ram[15] = 0x00;
 
 while (state.halted !== 1) {
-    // for (let i = 0; i < 100; i++) {
-    //console.log('counter: ', counter);
+    state = nextStep(state);
+}
 
-    let bus = state.ram[state.counter];
+function nextStep(currentState: State): State {
+    let newState: State = { ...currentState, ram: [...currentState.ram], };
+
+    let bus = newState.ram[newState.counter];
     let instruction = bus >> 4;
 
-    state.counter++;
+    newState.counter++;
 
-    if (state.counter > state.ram.length - 1) {
-        state.counter = 0;
+    if (newState.counter > newState.ram.length - 1) {
+        newState.counter = 0;
     }
 
     let value = bus & 15;
 
-    //console.log({ instruction: instructions.getInstructionName(instruction), value });
-
-    //console.log('bus: ', bus);
-    //console.log('aRegister: ', aRegister);
-    //console.log('bRegister: ', bRegister);
-    //console.log('');
-
     switch (instruction) {
         case instructions.LDA:
-            state.aRegister = state.ram[value];
+            newState.aRegister = newState.ram[value];
             break;
         case instructions.ADD:
-            state.bRegister = state.ram[value];
-            state.sumRegister = state.aRegister + state.bRegister;
+            newState.bRegister = newState.ram[value];
+            newState.sumRegister = newState.aRegister + newState.bRegister;
 
-            if (state.sumRegister >= 255) {
-                state.sumRegister -= 256;
-                state.carryFlag = 1;
+            if (newState.sumRegister >= 255) {
+                newState.sumRegister -= 256;
+                newState.carryFlag = 1;
             } else {
-                state.carryFlag = 0;
+                newState.carryFlag = 0;
             }
 
-            state.zeroFlag = state.sumRegister === 0 ? 1 : 0;
-            state.aRegister = state.sumRegister;
+            newState.zeroFlag = newState.sumRegister === 0 ? 1 : 0;
+            newState.aRegister = newState.sumRegister;
             break;
         case instructions.SUB:
-            state.bRegister = state.ram[value];
-            state.sumRegister = state.aRegister - state.bRegister;
+            newState.bRegister = newState.ram[value];
+            newState.sumRegister = newState.aRegister - newState.bRegister;
 
-            if (state.sumRegister < 0) {
-                state.sumRegister += 256;
-                state.carryFlag = 1;
+            if (newState.sumRegister < 0) {
+                newState.sumRegister += 256;
+                newState.carryFlag = 1;
             } else {
-                state.carryFlag = 0;
+                newState.carryFlag = 0;
             }
 
-            state.zeroFlag = state.sumRegister === 0 ? 1 : 0;
-            state.aRegister = state.sumRegister;
+            newState.zeroFlag = newState.sumRegister === 0 ? 1 : 0;
+            newState.aRegister = newState.sumRegister;
             break;
         case instructions.STA:
-            state.ram[value] = state.aRegister;
+            newState.ram[value] = newState.aRegister;
             break;
         case instructions.LDI:
             let val = bus & 15;
-            state.aRegister = val;
+            newState.aRegister = val;
             break;
         case instructions.JMP:
-            state.counter = value;
+            newState.counter = value;
             break;
         case instructions.JC:
-            if (state.carryFlag) {
-                state.counter = value;
+            if (newState.carryFlag) {
+                newState.counter = value;
             }
             break;
         case instructions.JZ:
-            if (state.zeroFlag) {
-                state.counter = value;
+            if (newState.zeroFlag) {
+                newState.counter = value;
             }
             break;
         case instructions.OUT:
-            console.log('OUT ', state.aRegister);
+            console.log('OUT ', newState.aRegister);
             break;
         case instructions.HLT:
             console.log('HLT');
-            state.halted = 1;
+            newState.halted = 1;
             break;
         default:
             //throw new Error('Unknown instruction: ' + instruction);
             console.log('uknown instruction: ' + instruction)
     }
+
+    return newState;
 }
