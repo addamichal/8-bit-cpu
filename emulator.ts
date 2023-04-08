@@ -1,4 +1,3 @@
-// TODO rewrite to typescript
 // TODO rewrite to functional style
 // TODO add tests
 // TODO rewrite using opcodes
@@ -23,49 +22,61 @@ const instructions = {
     }
 }
 
-let halted = false;
-let counter = 0;
-let aRegister = 0;
-let bRegister = 0;
-let sumRegister = 0;
-let carryFlag = 0;
-let zeroFlag = 0;
-
-let ram: number[] = [];
-
-for (let i = 0; i < 16; i++) {
-    ram[i] = 0;
+interface State {
+    halted: number;
+    counter: number;
+    aRegister: number;
+    bRegister: number;
+    sumRegister: number;
+    carryFlag: number;
+    zeroFlag: number;
+    ram: number[]
 }
 
-ram[0] = 0x51;
-ram[1] = 0x4e;
-ram[2] = 0x50;
-ram[3] = 0x4f;
-ram[4] = 0xe0;
-ram[5] = 0x1e;
-ram[6] = 0x2f;
-ram[7] = 0x4e;
-ram[8] = 0xe0;
-ram[9] = 0x1f;
-ram[10] = 0x2e;
-// ram[11] = 0x70; // to loop
-ram[11] = 0x7d;
-ram[12] = 0x63;
-ram[13] = 0xf0;
-ram[14] = 0x00;
-ram[15] = 0x00;
+let state: State = {
+    halted: 0,
+    counter: 0,
+    aRegister: 0,
+    bRegister: 0,
+    sumRegister: 0,
+    carryFlag: 0,
+    zeroFlag: 0,
+    ram: []
+};
 
-while (!halted) {
+for (let i = 0; i < 16; i++) {
+    state.ram[i] = 0;
+}
+
+state.ram[0] = 0x51;
+state.ram[1] = 0x4e;
+state.ram[2] = 0x50;
+state.ram[3] = 0x4f;
+state.ram[4] = 0xe0;
+state.ram[5] = 0x1e;
+state.ram[6] = 0x2f;
+state.ram[7] = 0x4e;
+state.ram[8] = 0xe0;
+state.ram[9] = 0x1f;
+state.ram[10] = 0x2e;
+// state.ram[11] = 0x70; // to loop
+state.ram[11] = 0x7d;
+state.ram[12] = 0x63;
+state.ram[13] = 0xf0;
+state.ram[14] = 0x00;
+state.ram[15] = 0x00;
+
+while (state.halted !== 1) {
     // for (let i = 0; i < 100; i++) {
     //console.log('counter: ', counter);
 
-    let bus = ram[counter];
+    let bus = state.ram[state.counter];
     let instruction = bus >> 4;
 
-    counter++;
+    state.counter++;
 
-    if (counter > ram.length - 1) {
-        counter = 0;
+    if (state.counter > state.ram.length - 1) {
+        state.counter = 0;
     }
 
     let value = bus & 15;
@@ -79,62 +90,62 @@ while (!halted) {
 
     switch (instruction) {
         case instructions.LDA:
-            aRegister = ram[value];
+            state.aRegister = state.ram[value];
             break;
         case instructions.ADD:
-            bRegister = ram[value];
-            sumRegister = aRegister + bRegister;
+            state.bRegister = state.ram[value];
+            state.sumRegister = state.aRegister + state.bRegister;
 
-            if (sumRegister >= 255) {
-                sumRegister -= 256;
-                carryFlag = 1;
+            if (state.sumRegister >= 255) {
+                state.sumRegister -= 256;
+                state.carryFlag = 1;
             } else {
-                carryFlag = 0;
+                state.carryFlag = 0;
             }
 
-            zeroFlag = sumRegister === 0 ? 1 : 0;
-            aRegister = sumRegister;
+            state.zeroFlag = state.sumRegister === 0 ? 1 : 0;
+            state.aRegister = state.sumRegister;
             break;
         case instructions.SUB:
-            bRegister = ram[value];
-            sumRegister = aRegister - bRegister;
+            state.bRegister = state.ram[value];
+            state.sumRegister = state.aRegister - state.bRegister;
 
-            if (sumRegister < 0) {
-                sumRegister += 256;
-                carryFlag = 1;
+            if (state.sumRegister < 0) {
+                state.sumRegister += 256;
+                state.carryFlag = 1;
             } else {
-                carryFlag = 0;
+                state.carryFlag = 0;
             }
 
-            zeroFlag = sumRegister === 0 ? 1 : 0;
-            aRegister = sumRegister;
+            state.zeroFlag = state.sumRegister === 0 ? 1 : 0;
+            state.aRegister = state.sumRegister;
             break;
         case instructions.STA:
-            ram[value] = aRegister;
+            state.ram[value] = state.aRegister;
             break;
         case instructions.LDI:
             let val = bus & 15;
-            aRegister = val;
+            state.aRegister = val;
             break;
         case instructions.JMP:
-            counter = value;
+            state.counter = value;
             break;
         case instructions.JC:
-            if (carryFlag) {
-                counter = value;
+            if (state.carryFlag) {
+                state.counter = value;
             }
             break;
         case instructions.JZ:
-            if (zeroFlag) {
-                counter = value;
+            if (state.zeroFlag) {
+                state.counter = value;
             }
             break;
         case instructions.OUT:
-            console.log('OUT ', aRegister);
+            console.log('OUT ', state.aRegister);
             break;
         case instructions.HLT:
             console.log('HLT');
-            halted = true;
+            state.halted = 1;
             break;
         default:
             //throw new Error('Unknown instruction: ' + instruction);
