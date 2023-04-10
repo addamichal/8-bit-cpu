@@ -39,4 +39,8 @@ describe('emulator tests', () => {
         expect(state.carryFlag).toBe(0);
         expect(state.zeroFlag).toBe(0);
     });
+
+    test('', () => {
+
+    });
 });

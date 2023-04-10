@@ -3,34 +3,8 @@
 // TODO add instruction parser
 // TODO add UI
 
-const instructions = {
-    NOP: 0,     // 0000
-    LDA: 1,     // 0001
-    ADD: 2,     // 0010
-    SUB: 3,     // 0011
-    STA: 4,     // 0100
-    LDI: 5,     // 0101
-    JMP: 6,     // 0110
-    JC: 7,      // 0111
-    JZ: 8,      // 1000
-    OUT: 14,    // 1110
-    HLT: 15,     // 1111
-
-    getInstructionName(value: number): string {
-        return Object.keys(this).filter(key => this[key as keyof typeof instructions] === value)[0];
-    }
-}
-
-interface State {
-    halted: number;
-    counter: number;
-    aRegister: number;
-    bRegister: number;
-    sumRegister: number;
-    carryFlag: number;
-    zeroFlag: number;
-    ram: number[]
-}
+import { instructions } from "./instructions";
+import { State } from "./state";
 
 let state: State = getInitState();
 
