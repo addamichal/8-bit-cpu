@@ -1,4 +1,3 @@
-// TODO rewrite to functional style
 // TODO add tests
 // TODO rewrite using opcodes
 // TODO add instruction parser
@@ -33,20 +32,7 @@ interface State {
     ram: number[]
 }
 
-let state: State = {
-    halted: 0,
-    counter: 0,
-    aRegister: 0,
-    bRegister: 0,
-    sumRegister: 0,
-    carryFlag: 0,
-    zeroFlag: 0,
-    ram: []
-};
-
-for (let i = 0; i < 16; i++) {
-    state.ram[i] = 0;
-}
+let state: State = getInitState();
 
 state.ram[0] = 0x51;
 state.ram[1] = 0x4e;
@@ -70,7 +56,7 @@ while (state.halted !== 1) {
     state = nextStep(state);
 }
 
-function nextStep(currentState: State): State {
+export function nextStep(currentState: State): State {
     let newState: State = { ...currentState, ram: [...currentState.ram], };
 
     let bus = newState.ram[newState.counter];
@@ -149,4 +135,23 @@ function nextStep(currentState: State): State {
     }
 
     return newState;
+}
+
+export function getInitState() {
+    let state: State = {
+        halted: 0,
+        counter: 0,
+        aRegister: 0,
+        bRegister: 0,
+        sumRegister: 0,
+        carryFlag: 0,
+        zeroFlag: 0,
+        ram: []
+    };
+
+    for (let i = 0; i < 16; i++) {
+        state.ram[i] = 0;
+    }
+
+    return state;
 }
