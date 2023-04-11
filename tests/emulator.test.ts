@@ -1,4 +1,5 @@
 import { getInitState, nextStep } from '../emulator';
+import { LdaInstruction } from '../instructions';
 
 describe('emulator tests', () => {
     test('init state', () => {
@@ -40,7 +41,19 @@ describe('emulator tests', () => {
         expect(state.zeroFlag).toBe(0);
     });
 
-    test('', () => {
+    test('lda instruction', () => {
+        let state = getInitState();
+        state.ram[0] = new LdaInstruction(15).toNumber();
+        state.ram[15] = 9;
 
+        state = nextStep(state);
+
+        expect(state.halted).toBe(0);
+        expect(state.counter).toBe(1);
+        expect(state.aRegister).toBe(9);
+        expect(state.bRegister).toBe(0);
+        expect(state.sumRegister).toBe(0);
+        expect(state.carryFlag).toBe(0);
+        expect(state.zeroFlag).toBe(0);
     });
 });
