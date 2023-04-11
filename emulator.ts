@@ -3,31 +3,33 @@
 // TODO add instruction parser
 // TODO add UI
 
-import { instructions } from "./instructions";
+import { InstructionCodes } from "./instructions";
 import { State } from "./state";
 
 let state: State = getInitState();
 
-state.ram[0] = 0x51;
-state.ram[1] = 0x4e;
-state.ram[2] = 0x50;
-state.ram[3] = 0x4f;
-state.ram[4] = 0xe0;
-state.ram[5] = 0x1e;
-state.ram[6] = 0x2f;
-state.ram[7] = 0x4e;
-state.ram[8] = 0xe0;
-state.ram[9] = 0x1f;
-state.ram[10] = 0x2e;
-// state.ram[11] = 0x70; // to loop
-state.ram[11] = 0x7d;
-state.ram[12] = 0x63;
-state.ram[13] = 0xf0;
-state.ram[14] = 0x00;
-state.ram[15] = 0x00;
+export function run() {
+    state.ram[0] = 0x51;
+    state.ram[1] = 0x4e;
+    state.ram[2] = 0x50;
+    state.ram[3] = 0x4f;
+    state.ram[4] = 0xe0;
+    state.ram[5] = 0x1e;
+    state.ram[6] = 0x2f;
+    state.ram[7] = 0x4e;
+    state.ram[8] = 0xe0;
+    state.ram[9] = 0x1f;
+    state.ram[10] = 0x2e;
+    // state.ram[11] = 0x70; // to loop
+    state.ram[11] = 0x7d;
+    state.ram[12] = 0x63;
+    state.ram[13] = 0xf0;
+    state.ram[14] = 0x00;
+    state.ram[15] = 0x00;
 
-while (state.halted !== 1) {
-    state = nextStep(state);
+    while (state.halted !== 1) {
+        state = nextStep(state);
+    }
 }
 
 export function nextStep(currentState: State): State {
@@ -45,10 +47,12 @@ export function nextStep(currentState: State): State {
     let value = bus & 15;
 
     switch (instruction) {
-        case instructions.LDA:
+        case InstructionCodes.NOP:
+            break;
+        case InstructionCodes.LDA:
             newState.aRegister = newState.ram[value];
             break;
-        case instructions.ADD:
+        case InstructionCodes.ADD:
             newState.bRegister = newState.ram[value];
             newState.sumRegister = newState.aRegister + newState.bRegister;
 
@@ -62,7 +66,7 @@ export function nextStep(currentState: State): State {
             newState.zeroFlag = newState.sumRegister === 0 ? 1 : 0;
             newState.aRegister = newState.sumRegister;
             break;
-        case instructions.SUB:
+        case InstructionCodes.SUB:
             newState.bRegister = newState.ram[value];
             newState.sumRegister = newState.aRegister - newState.bRegister;
 
@@ -76,30 +80,30 @@ export function nextStep(currentState: State): State {
             newState.zeroFlag = newState.sumRegister === 0 ? 1 : 0;
             newState.aRegister = newState.sumRegister;
             break;
-        case instructions.STA:
+        case InstructionCodes.STA:
             newState.ram[value] = newState.aRegister;
             break;
-        case instructions.LDI:
+        case InstructionCodes.LDI:
             let val = bus & 15;
             newState.aRegister = val;
             break;
-        case instructions.JMP:
+        case InstructionCodes.JMP:
             newState.counter = value;
             break;
-        case instructions.JC:
+        case InstructionCodes.JC:
             if (newState.carryFlag) {
                 newState.counter = value;
             }
             break;
-        case instructions.JZ:
+        case InstructionCodes.JZ:
             if (newState.zeroFlag) {
                 newState.counter = value;
             }
             break;
-        case instructions.OUT:
+        case InstructionCodes.OUT:
             console.log('OUT ', newState.aRegister);
             break;
-        case instructions.HLT:
+        case InstructionCodes.HLT:
             console.log('HLT');
             newState.halted = 1;
             break;
