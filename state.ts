@@ -6,5 +6,7 @@ export interface State {
     sumRegister: number;
     carryFlag: number;
     zeroFlag: number;
-    ram: number[]
+    ram: number[],
+
+    copy(): State;
 }

@@ -1,4 +1,5 @@
-// TODO add tests
+// TODO finish tests for all instructions
+// TODO unify vocabulary?
 // TODO rewrite using opcodes
 // TODO add instruction parser
 // TODO add UI
@@ -33,7 +34,7 @@ export function run() {
 }
 
 export function nextStep(currentState: State): State {
-    let newState: State = { ...currentState, ram: [...currentState.ram], };
+    let newState: State = currentState.copy();
 
     let bus = newState.ram[newState.counter];
     let instruction = bus >> 4;
@@ -124,7 +125,10 @@ export function getInitState() {
         sumRegister: 0,
         carryFlag: 0,
         zeroFlag: 0,
-        ram: []
+        ram: [],
+        copy: function () {
+            return { ...this, ram: [...this.ram] };
+        }
     };
 
     for (let i = 0; i < 16; i++) {

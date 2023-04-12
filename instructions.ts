@@ -40,3 +40,9 @@ export class LdaInstruction extends Instruction {
         super(InstructionCodes.LDA, value);
     }
 }
+
+export class StaInstruction extends Instruction {
+    constructor(value: number) {
+        super(InstructionCodes.STA, value);
+    }
+}
