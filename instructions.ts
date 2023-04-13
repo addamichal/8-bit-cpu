@@ -58,3 +58,15 @@ export class HltInstruction extends Instruction {
         super(InstructionCodes.HLT, 0);
     }
 }
+
+export class AddInstruction extends Instruction {
+    constructor(value: number) {
+        super(InstructionCodes.ADD, value);
+    }
+}
+
+export class SubInstruction extends Instruction {
+    constructor(value: number) {
+        super(InstructionCodes.SUB, value);
+    }
+}

@@ -1,5 +1,5 @@
 import { getInitState, nextStep } from '../emulator';
-import { HltInstruction, LdaInstruction, LdiInstruction, StaInstruction } from '../instructions';
+import { AddInstruction, HltInstruction, LdaInstruction, LdiInstruction, StaInstruction, SubInstruction } from '../instructions';
 
 describe('emulator tests', () => {
     test('init state', () => {
@@ -90,6 +90,147 @@ describe('emulator tests', () => {
         let expected = initState.copy();
         expected.counter = 1;
         expected.halted = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('add instruction simple adition', () => {
+        let initState = getInitState();
+        initState.aRegister = 9;
+        initState.ram[15] = 3;
+        initState.ram[0] = new AddInstruction(15).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 12;
+        expected.bRegister = 3;
+        expected.sumRegister = 12;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('add instruction zero flag', () => {
+        let initState = getInitState();
+        initState.aRegister = 0;
+        initState.ram[0] = new AddInstruction(15).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 0;
+        expected.bRegister = 0;
+        expected.sumRegister = 0;
+        expected.zeroFlag = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('add instruction carry and zero flags', () => {
+        let initState = getInitState();
+        initState.aRegister = 255;
+        initState.ram[15] = 1;
+        initState.ram[0] = new AddInstruction(15).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 0;
+        expected.bRegister = 1;
+        expected.sumRegister = 0;
+        expected.carryFlag = 1;
+        expected.zeroFlag = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('add instruction carry flag test 1', () => {
+        let initState = getInitState();
+        initState.aRegister = 255;
+        initState.ram[15] = 2;
+        initState.ram[0] = new AddInstruction(15).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 1;
+        expected.bRegister = 2;
+        expected.sumRegister = 1;
+        expected.carryFlag = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('add instruction carry flag test 2', () => {
+        let initState = getInitState();
+        initState.aRegister = 255;
+        initState.ram[15] = 3;
+        initState.ram[0] = new AddInstruction(15).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 2;
+        expected.bRegister = 3;
+        expected.sumRegister = 2;
+        expected.carryFlag = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('sub instruction simple subtraction', () => {
+        let initState = getInitState();
+        initState.aRegister = 9;
+        initState.ram[15] = 3;
+        initState.ram[0] = new SubInstruction(15).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 6;
+        expected.bRegister = 3;
+        expected.sumRegister = 6;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('sub instruction zero flag', () => {
+        let initState = getInitState();
+        initState.aRegister = 0;
+        initState.ram[0] = new SubInstruction(15).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 0;
+        expected.bRegister = 0;
+        expected.sumRegister = 0;
+        expected.zeroFlag = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('sub instruction carry flag', () => {
+        let initState = getInitState();
+        initState.aRegister = 13;
+        initState.ram[15] = 15;
+        initState.ram[0] = new SubInstruction(15).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 254;
+        expected.bRegister = 15;
+        expected.sumRegister = 254;
+        expected.carryFlag = 1;
 
         expect(expected).toEqual(actual);
     });
