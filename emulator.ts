@@ -85,8 +85,7 @@ export function nextStep(currentState: State): State {
             newState.ram[value] = newState.aRegister;
             break;
         case InstructionCodes.LDI:
-            let val = bus & 15;
-            newState.aRegister = val;
+            newState.aRegister = value;
             break;
         case InstructionCodes.JMP:
             newState.counter = value;

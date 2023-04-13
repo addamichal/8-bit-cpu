@@ -46,3 +46,15 @@ export class StaInstruction extends Instruction {
         super(InstructionCodes.STA, value);
     }
 }
+
+export class LdiInstruction extends Instruction {
+    constructor(value: number) {
+        super(InstructionCodes.LDI, value);
+    }
+}
+
+export class HltInstruction extends Instruction {
+    constructor() {
+        super(InstructionCodes.HLT, 0);
+    }
+}

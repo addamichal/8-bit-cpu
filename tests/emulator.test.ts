@@ -1,5 +1,5 @@
 import { getInitState, nextStep } from '../emulator';
-import { LdaInstruction, StaInstruction } from '../instructions';
+import { HltInstruction, LdaInstruction, LdiInstruction, StaInstruction } from '../instructions';
 
 describe('emulator tests', () => {
     test('init state', () => {
@@ -62,6 +62,34 @@ describe('emulator tests', () => {
         expected.counter = 1;
         expected.aRegister = 9;
         expected.ram[14] = 9;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('ldi instruction', () => {
+        let initState = getInitState();
+        initState.aRegister = 9;
+        initState.ram[0] = new LdiInstruction(14).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 14;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('hlt instruction', () => {
+        let initState = getInitState();
+        initState.aRegister = 9;
+        initState.ram[0] = new HltInstruction().toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.halted = 1;
 
         expect(expected).toEqual(actual);
     });
