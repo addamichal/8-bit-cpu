@@ -1,6 +1,3 @@
-// TODO finish tests for all instructions
-    // jump
-    // out
 // TODO better way to add / subctract 2 8 bit numbers? Also better expect for tests?
 // TODO write acceptance test using final state of running fibonacci program
 // TODO unify vocabulary?
@@ -107,15 +104,14 @@ export function nextStep(currentState: State): State {
             }
             break;
         case InstructionCodes.OUT:
+            newState.outRegister = value;
             console.log('OUT ', newState.aRegister);
             break;
         case InstructionCodes.HLT:
-            console.log('HLT');
             newState.halted = 1;
             break;
         default:
-            //throw new Error('Unknown instruction: ' + instruction);
-            console.log('uknown instruction: ' + instruction)
+            throw new Error('Unknown instruction: ' + instruction);
     }
 
     return newState;
@@ -128,6 +124,7 @@ export function getInitState() {
         aRegister: 0,
         bRegister: 0,
         sumRegister: 0,
+        outRegister: 0,
         carryFlag: 0,
         zeroFlag: 0,
         ram: [],

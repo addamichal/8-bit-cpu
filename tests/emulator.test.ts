@@ -1,5 +1,5 @@
 import { getInitState, nextStep } from '../emulator';
-import { AddInstruction, HltInstruction, LdaInstruction, LdiInstruction, StaInstruction, SubInstruction } from '../instructions';
+import { AddInstruction, HltInstruction, JcInstruction, JmpInstruction, LdaInstruction, LdiInstruction, OutInstruction, StaInstruction, SubInstruction } from '../instructions';
 
 describe('emulator tests', () => {
     test('init state', () => {
@@ -10,6 +10,7 @@ describe('emulator tests', () => {
         expect(state.aRegister).toBe(0);
         expect(state.bRegister).toBe(0);
         expect(state.sumRegister).toBe(0);
+        expect(state.outRegister).toBe(0);
         expect(state.carryFlag).toBe(0);
         expect(state.zeroFlag).toBe(0);
     });
@@ -231,6 +232,81 @@ describe('emulator tests', () => {
         expected.bRegister = 15;
         expected.sumRegister = 254;
         expected.carryFlag = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('jmp instruction', () => {
+        let initState = getInitState();
+        initState.ram[0] = new JmpInstruction(7).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 7;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('jc instruction no carry flag', () => {
+        let initState = getInitState();
+        initState.ram[0] = new JcInstruction(7).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('jc instruction with carry flag', () => {
+        let initState = getInitState();
+        initState.carryFlag = 1;
+        initState.ram[0] = new JcInstruction(7).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 7;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('jz instruction no zero flag', () => {
+        let initState = getInitState();
+        initState.ram[0] = new JcInstruction(7).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('jz instruction with zero flag', () => {
+        let initState = getInitState();
+        initState.carryFlag = 1;
+        initState.ram[0] = new JcInstruction(7).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 7;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('out instruction', () => {
+        let initState = getInitState();
+        initState.ram[0] = new OutInstruction(7).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.outRegister = 7;
 
         expect(expected).toEqual(actual);
     });

@@ -70,3 +70,27 @@ export class SubInstruction extends Instruction {
         super(InstructionCodes.SUB, value);
     }
 }
+
+export class JmpInstruction extends Instruction {
+    constructor(value: number) {
+        super(InstructionCodes.JMP, value);
+    }
+}
+
+export class JcInstruction extends Instruction {
+    constructor(value: number) {
+        super(InstructionCodes.JC, value);
+    }
+}
+
+export class JzInstruction extends Instruction {
+    constructor(value: number) {
+        super(InstructionCodes.JZ, value);
+    }
+}
+
+export class OutInstruction extends Instruction {
+    constructor(value: number) {
+        super(InstructionCodes.OUT, value);
+    }
+}
