@@ -10,30 +10,14 @@
 import { InstructionCodes } from "./instructions";
 import { State } from "./state";
 
-let state: State = getInitState();
-
-export function run() {
-    state.ram[0] = 0x51;
-    state.ram[1] = 0x4e;
-    state.ram[2] = 0x50;
-    state.ram[3] = 0x4f;
-    state.ram[4] = 0xe0;
-    state.ram[5] = 0x1e;
-    state.ram[6] = 0x2f;
-    state.ram[7] = 0x4e;
-    state.ram[8] = 0xe0;
-    state.ram[9] = 0x1f;
-    state.ram[10] = 0x2e;
-    // state.ram[11] = 0x70; // to loop
-    state.ram[11] = 0x7d;
-    state.ram[12] = 0x63;
-    state.ram[13] = 0xf0;
-    state.ram[14] = 0x00;
-    state.ram[15] = 0x00;
-
-    while (state.halted !== 1) {
-        state = nextStep(state);
+export function run(initState: State): State {
+    let currentState = initState;
+    while (currentState.halted !== 1) {
+        let nextState = nextStep(currentState);
+        currentState = nextState;
     }
+
+    return currentState;
 }
 
 export function nextStep(currentState: State): State {
@@ -58,28 +42,32 @@ export function nextStep(currentState: State): State {
             break;
         case InstructionCodes.ADD:
             newState.bRegister = newState.ram[value];
-            newState.sumRegister = newState.aRegister + newState.bRegister;
 
-            if (newState.sumRegister >= 255) {
-                newState.sumRegister -= 256;
+            let add = newState.aRegister + newState.bRegister;
+            if (add >= 256) {
                 newState.carryFlag = 1;
             } else {
                 newState.carryFlag = 0;
             }
+
+            newState.sumRegister = add & 255;
 
             newState.zeroFlag = newState.sumRegister === 0 ? 1 : 0;
             newState.aRegister = newState.sumRegister;
             break;
         case InstructionCodes.SUB:
             newState.bRegister = newState.ram[value];
-            newState.sumRegister = newState.aRegister - newState.bRegister;
 
-            if (newState.sumRegister < 0) {
-                newState.sumRegister += 256;
+            let twoComplement = ((~newState.bRegister & 255) + 1) & 255;
+
+            let sub = newState.aRegister + twoComplement;
+            if (sub >= 256) {
                 newState.carryFlag = 1;
             } else {
                 newState.carryFlag = 0;
             }
+
+            newState.sumRegister = sub & 255;
 
             newState.zeroFlag = newState.sumRegister === 0 ? 1 : 0;
             newState.aRegister = newState.sumRegister;
@@ -104,8 +92,7 @@ export function nextStep(currentState: State): State {
             }
             break;
         case InstructionCodes.OUT:
-            newState.outRegister = value;
-            console.log('OUT ', newState.aRegister);
+            newState.outRegister = newState.aRegister;
             break;
         case InstructionCodes.HLT:
             newState.halted = 1;

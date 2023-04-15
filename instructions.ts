@@ -90,7 +90,7 @@ export class JzInstruction extends Instruction {
 }
 
 export class OutInstruction extends Instruction {
-    constructor(value: number) {
-        super(InstructionCodes.OUT, value);
+    constructor() {
+        super(InstructionCodes.OUT, 0);
     }
 }

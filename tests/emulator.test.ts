@@ -112,6 +112,23 @@ describe('emulator tests', () => {
         expect(expected).toEqual(actual);
     });
 
+    test('add instruction results to 255', () => {
+        let initState = getInitState();
+        initState.aRegister = 254;
+        initState.ram[15] = 1;
+        initState.ram[0] = new AddInstruction(15).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 255;
+        expected.bRegister = 1;
+        expected.sumRegister = 255;
+
+        expect(expected).toEqual(actual);
+    });
+
     test('add instruction zero flag', () => {
         let initState = getInitState();
         initState.aRegister = 0;
@@ -184,7 +201,7 @@ describe('emulator tests', () => {
         expect(expected).toEqual(actual);
     });
 
-    test('sub instruction simple subtraction', () => {
+    test('sub instruction positive result', () => {
         let initState = getInitState();
         initState.aRegister = 9;
         initState.ram[15] = 3;
@@ -197,6 +214,24 @@ describe('emulator tests', () => {
         expected.aRegister = 6;
         expected.bRegister = 3;
         expected.sumRegister = 6;
+        expected.carryFlag = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('sub instruction negative result', () => {
+        let initState = getInitState();
+        initState.aRegister = 13;
+        initState.ram[15] = 15;
+        initState.ram[0] = new SubInstruction(15).toNumber();
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 254;
+        expected.bRegister = 15;
+        expected.sumRegister = 254;
 
         expect(expected).toEqual(actual);
     });
@@ -218,19 +253,37 @@ describe('emulator tests', () => {
         expect(expected).toEqual(actual);
     });
 
-    test('sub instruction carry flag', () => {
+    test('sub instruction no flags', () => {
         let initState = getInitState();
-        initState.aRegister = 13;
-        initState.ram[15] = 15;
+        initState.aRegister = 0;
+        initState.ram[0] = new SubInstruction(15).toNumber();
+        initState.ram[15] = 1;
+
+        let actual = nextStep(initState);
+
+        let expected = initState.copy();
+        expected.counter = 1;
+        expected.aRegister = 255;
+        expected.bRegister = 1;
+        expected.sumRegister = 255;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('sub instruction results to 0', () => {
+        let initState = getInitState();
+        initState.aRegister = 8;
+        initState.ram[15] = 8;
         initState.ram[0] = new SubInstruction(15).toNumber();
 
         let actual = nextStep(initState);
 
         let expected = initState.copy();
         expected.counter = 1;
-        expected.aRegister = 254;
-        expected.bRegister = 15;
-        expected.sumRegister = 254;
+        expected.aRegister = 0;
+        expected.bRegister = 8;
+        expected.sumRegister = 0;
+        expected.zeroFlag = 1;
         expected.carryFlag = 1;
 
         expect(expected).toEqual(actual);
@@ -300,7 +353,8 @@ describe('emulator tests', () => {
 
     test('out instruction', () => {
         let initState = getInitState();
-        initState.ram[0] = new OutInstruction(7).toNumber();
+        initState.aRegister = 7;
+        initState.ram[0] = new OutInstruction().toNumber();
 
         let actual = nextStep(initState);
 
