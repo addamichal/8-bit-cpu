@@ -1,5 +1,4 @@
-// TODO better way to add / subctract 2 8 bit numbers? Also better expect for tests?
-// TODO write acceptance test using final state of running fibonacci program
+// TODO more sample programs?
 // TODO unify vocabulary?
 // TODO rewrite using opcodes
 // TODO add instruction parser
