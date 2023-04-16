@@ -1,10 +1,12 @@
-// TODO more sample programs?
+// TODO emulate memory address, memory content and instruction register?
 // TODO unify vocabulary?
 // TODO rewrite using opcodes
 // TODO add instruction parser
 // TODO add UI
 // TODO add used resources
 // TODO add readme
+// TODO more sample programs?
+// todo snake or game of life?
 
 import { InstructionCodes } from "./instructions";
 import { State } from "./state";
@@ -22,18 +24,19 @@ export function run(initState: State): State {
 export function nextStep(currentState: State): State {
     let newState: State = currentState.copy();
 
-    let bus = newState.ram[newState.counter];
-    let instruction = bus >> 4;
+    // MI | CO
+    newState.memoryAddress = newState.counter;
+    newState.memoryContent = newState.ram[newState.memoryAddress];
 
+    // RO | II | CE
+    newState.instructionRegister = newState.memoryContent >> 4;
     newState.counter++;
+    newState.counter = newState.counter & 15;
 
-    if (newState.counter > newState.ram.length - 1) {
-        newState.counter = 0;
-    }
+    // IO
+    let value = newState.memoryContent & 15;
 
-    let value = bus & 15;
-
-    switch (instruction) {
+    switch (newState.instructionRegister) {
         case InstructionCodes.NOP:
             break;
         case InstructionCodes.LDA:
@@ -97,7 +100,7 @@ export function nextStep(currentState: State): State {
             newState.halted = 1;
             break;
         default:
-            throw new Error('Unknown instruction: ' + instruction);
+            throw new Error('Unknown instruction: ' + newState.instructionRegister);
     }
 
     return newState;
@@ -106,6 +109,10 @@ export function nextStep(currentState: State): State {
 export function getInitState() {
     let state: State = {
         halted: 0,
+        memoryAddress: 0,
+        memoryContent: 0,
+        ram: [],
+        instructionRegister: 0,
         counter: 0,
         aRegister: 0,
         bRegister: 0,
@@ -113,10 +120,9 @@ export function getInitState() {
         outRegister: 0,
         carryFlag: 0,
         zeroFlag: 0,
-        ram: [],
         copy: function () {
             return { ...this, ram: [...this.ram] };
-        }
+        },
     };
 
     for (let i = 0; i < 16; i++) {
