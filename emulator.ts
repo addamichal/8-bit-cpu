@@ -1,4 +1,3 @@
-// TODO emulate memory address, memory content and instruction register?
 // TODO unify vocabulary?
 // TODO rewrite using opcodes
 // TODO add instruction parser
@@ -24,26 +23,36 @@ export function run(initState: State): State {
 export function nextStep(currentState: State): State {
     let newState: State = currentState.copy();
 
-    // MI | CO
-    newState.memoryAddress = newState.counter;
-    newState.memoryContent = newState.ram[newState.memoryAddress];
+    // MI|CO
+    newState.bus = newState.counter;
+    newState.memoryAddress = newState.bus;
 
-    // RO | II | CE
-    newState.instructionRegister = newState.memoryContent >> 4;
-    newState.counter++;
-    newState.counter = newState.counter & 15;
+    // RO|II|CE
+    newState.bus = newState.memoryContent;
+    newState.instructionRegister = newState.bus;
+    newState.counter = (newState.counter + 1) & 15;
 
-    // IO
-    let value = newState.memoryContent & 15;
-
-    switch (newState.instructionRegister) {
+    let instruction = newState.instructionRegister >> 4;
+    switch (instruction) {
         case InstructionCodes.NOP:
             break;
         case InstructionCodes.LDA:
-            newState.aRegister = newState.ram[value];
+            // IO|MI
+            newState.bus = newState.instructionRegister & 15;
+            newState.memoryAddress = newState.bus;
+
+            // RO|AI
+            newState.bus = newState.memoryContent;
+            newState.aRegister = newState.bus;
             break;
         case InstructionCodes.ADD:
-            newState.bRegister = newState.ram[value];
+            // IO|MI
+            newState.bus = newState.instructionRegister & 15;
+            newState.memoryAddress = newState.bus;
+
+            // RO|BI
+            newState.bus = newState.memoryContent;
+            newState.bRegister = newState.bus;
 
             let add = newState.aRegister + newState.bRegister;
             if (add >= 256) {
@@ -55,10 +64,19 @@ export function nextStep(currentState: State): State {
             newState.sumRegister = add & 255;
 
             newState.zeroFlag = newState.sumRegister === 0 ? 1 : 0;
-            newState.aRegister = newState.sumRegister;
+
+            //EO|AI
+            newState.bus = newState.sumRegister;
+            newState.aRegister = newState.bus;
             break;
         case InstructionCodes.SUB:
-            newState.bRegister = newState.ram[value];
+            // IO|MI
+            newState.bus = newState.instructionRegister & 15;
+            newState.memoryAddress = newState.bus;
+
+            // RO|BI|SU
+            newState.bus = newState.memoryContent;
+            newState.bRegister = newState.bus;
 
             let twoComplement = ((~newState.bRegister & 255) + 1) & 255;
 
@@ -72,31 +90,51 @@ export function nextStep(currentState: State): State {
             newState.sumRegister = sub & 255;
 
             newState.zeroFlag = newState.sumRegister === 0 ? 1 : 0;
-            newState.aRegister = newState.sumRegister;
+
+            //EO|AI
+            newState.bus = newState.sumRegister;
+            newState.aRegister = newState.bus;
             break;
         case InstructionCodes.STA:
-            newState.ram[value] = newState.aRegister;
+            // IO|MI
+            newState.bus = newState.instructionRegister & 15;
+            newState.memoryAddress = newState.bus;
+
+            // AO|RI
+            newState.bus = newState.aRegister;
+            newState.memoryContent = newState.bus;
             break;
         case InstructionCodes.LDI:
-            newState.aRegister = value;
+            // IO|AI
+            newState.bus = newState.instructionRegister & 15;
+            newState.aRegister = newState.bus;
             break;
         case InstructionCodes.JMP:
-            newState.counter = value;
+            // IO|J
+            newState.bus = newState.instructionRegister & 15;
+            newState.counter = newState.bus;
             break;
         case InstructionCodes.JC:
             if (newState.carryFlag) {
-                newState.counter = value;
+                // IO|J
+                newState.bus = newState.instructionRegister & 15;
+                newState.counter = newState.bus;
             }
             break;
         case InstructionCodes.JZ:
             if (newState.zeroFlag) {
-                newState.counter = value;
+                // IO|J
+                newState.bus = newState.instructionRegister & 15;
+                newState.counter = newState.bus;
             }
             break;
         case InstructionCodes.OUT:
-            newState.outRegister = newState.aRegister;
+            // AO|OI
+            newState.bus = newState.aRegister;
+            newState.outRegister = newState.bus;
             break;
         case InstructionCodes.HLT:
+            // HLT
             newState.halted = 1;
             break;
         default:
@@ -107,27 +145,5 @@ export function nextStep(currentState: State): State {
 }
 
 export function getInitState() {
-    let state: State = {
-        halted: 0,
-        memoryAddress: 0,
-        memoryContent: 0,
-        ram: [],
-        instructionRegister: 0,
-        counter: 0,
-        aRegister: 0,
-        bRegister: 0,
-        sumRegister: 0,
-        outRegister: 0,
-        carryFlag: 0,
-        zeroFlag: 0,
-        copy: function () {
-            return { ...this, ram: [...this.ram] };
-        },
-    };
-
-    for (let i = 0; i < 16; i++) {
-        state.ram[i] = 0;
-    }
-
-    return state;
+    return new State();
 }
