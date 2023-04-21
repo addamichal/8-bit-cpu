@@ -1,3 +1,4 @@
+// TODO rename to next instruction, add subtract, add sumOverflow, sumZero, move logic to state
 // TODO unify vocabulary?
 // TODO rewrite using opcodes
 // TODO add instruction parser
@@ -7,20 +8,69 @@
 // TODO more sample programs?
 // todo snake or game of life?
 
-import { InstructionCodes } from "./instructions";
+import { InstructionCodes, Opcodes } from "./instructions";
 import { State } from "./state";
 
 export function run(initState: State): State {
     let currentState = initState;
     while (currentState.halted !== 1) {
-        let nextState = nextStep(currentState);
+        let nextState = nextInstruction(currentState);
         currentState = nextState;
     }
 
     return currentState;
 }
 
-export function nextStep(currentState: State): State {
+export function handleOpcode(opcode: Opcodes, currentState: State): State {
+    let newState = currentState.copy();
+    switch(opcode) {
+        case Opcodes.HLT:
+            newState.halted = 1;
+            return newState;
+        case Opcodes.MI:
+            newState.memoryAddress = newState.bus;
+            return newState;
+        case Opcodes.RI:
+            newState.memoryContent = newState.bus;
+            return newState;
+        case Opcodes.RO:
+            newState.bus = newState.memoryContent;
+            return newState;
+        case Opcodes.IO:
+            newState.bus = newState.instructionRegister;
+            return newState;
+        case Opcodes.II:
+            newState.instructionRegister = newState.bus;
+            return newState;
+        case Opcodes.AI:
+            newState.aRegister = newState.bus;
+            return newState;
+        case Opcodes.AO:
+            newState.bus = newState.aRegister;
+            return newState;
+        case Opcodes.EO:
+            newState.bus = newState.sumRegister;
+            return newState;
+        case Opcodes.SU:
+            newState.aluSubtract = 1;
+            return newState;
+        case Opcodes.BI:
+            newState.bRegister = newState.bus;
+            return newState;
+        case Opcodes.OI:
+            newState.outRegister = newState.bus;
+            return newState;
+        case Opcodes.CE:
+            newState.counter++;
+            newState.counter = newState.counter & 15;
+            return newState;
+        case Opcodes.CO:
+            newState.bus = newState.counter;
+            return newState;
+    }
+}
+
+export function nextInstruction(currentState: State): State {
     let newState: State = currentState.copy();
 
     // MI|CO
@@ -54,19 +104,11 @@ export function nextStep(currentState: State): State {
             newState.bus = newState.memoryContent;
             newState.bRegister = newState.bus;
 
-            let add = newState.aRegister + newState.bRegister;
-            if (add >= 256) {
-                newState.carryFlag = 1;
-            } else {
-                newState.carryFlag = 0;
-            }
-
-            newState.sumRegister = add & 255;
-
-            newState.zeroFlag = newState.sumRegister === 0 ? 1 : 0;
-
-            //EO|AI
+            // EO|AI|FI
+            newState.aluSubtract = 0;
             newState.bus = newState.sumRegister;
+            newState.zeroFlag = newState.sumRegisterZero;
+            newState.carryFlag = newState.sumRegisterOverflow;
             newState.aRegister = newState.bus;
             break;
         case InstructionCodes.SUB:
@@ -74,24 +116,14 @@ export function nextStep(currentState: State): State {
             newState.bus = newState.instructionRegister & 15;
             newState.memoryAddress = newState.bus;
 
-            // RO|BI|SU
+            // RO|BI
             newState.bus = newState.memoryContent;
             newState.bRegister = newState.bus;
 
-            let twoComplement = ((~newState.bRegister & 255) + 1) & 255;
-
-            let sub = newState.aRegister + twoComplement;
-            if (sub >= 256) {
-                newState.carryFlag = 1;
-            } else {
-                newState.carryFlag = 0;
-            }
-
-            newState.sumRegister = sub & 255;
-
-            newState.zeroFlag = newState.sumRegister === 0 ? 1 : 0;
-
-            //EO|AI
+            // EO|AI|SU|FI
+            newState.aluSubtract = 1;
+            newState.zeroFlag = newState.sumRegisterZero;
+            newState.carryFlag = newState.sumRegisterOverflow;
             newState.bus = newState.sumRegister;
             newState.aRegister = newState.bus;
             break;

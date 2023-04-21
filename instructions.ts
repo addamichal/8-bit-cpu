@@ -1,3 +1,22 @@
+export enum Opcodes {
+    HLT,
+    MI,
+    RI,
+    RO,
+    IO,
+    II,
+    AI,
+    AO,
+    EO,
+    SU,
+    BI,
+    OI,
+    CE,
+    CO,
+    J,
+    FI
+}
+
 export enum InstructionCodes {
     NOP = 0,     // 0000
     LDA = 1,     // 0001

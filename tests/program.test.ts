@@ -45,5 +45,4 @@ describe('testing instructions', () => {
 
         expect(finalState.outRegister).toBe(195);
     });
-
 });
