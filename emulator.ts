@@ -21,52 +21,88 @@ export function run(initState: State): State {
     return currentState;
 }
 
-export function handleOpcode(opcode: Opcodes, currentState: State): State {
+export function handleOpcode(opcode: Opcodes, opCodeValue: number, currentState: State): State {
     let newState = currentState.copy();
-    switch(opcode) {
+    switch (opcode) {
         case Opcodes.HLT:
-            newState.halted = 1;
+            newState.halted = opCodeValue;
             return newState;
         case Opcodes.MI:
-            newState.memoryAddress = newState.bus;
+            if (opCodeValue) {
+                newState.memoryAddress = newState.bus;
+            }
             return newState;
         case Opcodes.RI:
-            newState.memoryContent = newState.bus;
+            if (opCodeValue) {
+                newState.memoryContent = newState.bus;
+            }
             return newState;
         case Opcodes.RO:
-            newState.bus = newState.memoryContent;
+            if (opCodeValue) {
+                newState.bus = newState.memoryContent;
+            }
             return newState;
         case Opcodes.IO:
-            newState.bus = newState.instructionRegister;
+            if (opCodeValue) {
+                newState.bus = newState.instructionRegister & 15;
+            }
             return newState;
         case Opcodes.II:
-            newState.instructionRegister = newState.bus;
+            if (opCodeValue) {
+                newState.instructionRegister = newState.bus;
+            }
             return newState;
         case Opcodes.AI:
-            newState.aRegister = newState.bus;
+            if (opCodeValue) {
+                newState.aRegister = newState.bus;
+            }
             return newState;
         case Opcodes.AO:
-            newState.bus = newState.aRegister;
+            if (opCodeValue) {
+                newState.bus = newState.aRegister;
+            }
             return newState;
         case Opcodes.EO:
-            newState.bus = newState.sumRegister;
+            if (opCodeValue) {
+                newState.bus = newState.sumRegister;
+            }
             return newState;
         case Opcodes.SU:
-            newState.aluSubtract = 1;
+            newState.aluSubtract = opCodeValue;
             return newState;
         case Opcodes.BI:
-            newState.bRegister = newState.bus;
+            if (opCodeValue) {
+                newState.bRegister = newState.bus;
+            }
             return newState;
         case Opcodes.OI:
-            newState.outRegister = newState.bus;
+            if (opCodeValue) {
+                newState.outRegister = newState.bus;
+            }
             return newState;
         case Opcodes.CE:
-            newState.counter++;
-            newState.counter = newState.counter & 15;
+            if (opCodeValue) {
+                newState.counter = (newState.counter + 1) & 15;
+            }
             return newState;
         case Opcodes.CO:
-            newState.bus = newState.counter;
+            if (opCodeValue) {
+                newState.bus = newState.counter;
+            }
             return newState;
+        case Opcodes.J:
+            if (opCodeValue) {
+                newState.counter = newState.bus;
+            }
+            return newState;
+        case Opcodes.FI:
+            if (opCodeValue) {
+                newState.zeroFlag = newState.sumRegisterZero;
+                newState.carryFlag = newState.sumRegisterOverflow;
+            }
+            return newState;
+        default:
+            throw new Error('Unknown opcode: ' + opcode);
     }
 }
 
@@ -97,12 +133,12 @@ export function nextInstruction(currentState: State): State {
             break;
         case InstructionCodes.ADD:
             // IO|MI
-            newState.bus = newState.instructionRegister & 15;
-            newState.memoryAddress = newState.bus;
+            newState = handleOpcode(Opcodes.IO, 1, newState);
+            newState = handleOpcode(Opcodes.MI, 1, newState);
 
             // RO|BI
-            newState.bus = newState.memoryContent;
-            newState.bRegister = newState.bus;
+            newState = handleOpcode(Opcodes.RO, 1, newState);
+            newState = handleOpcode(Opcodes.BI, 1, newState);
 
             // EO|AI|FI
             newState.aluSubtract = 0;
@@ -122,8 +158,7 @@ export function nextInstruction(currentState: State): State {
 
             // EO|AI|SU|FI
             newState.aluSubtract = 1;
-            newState.zeroFlag = newState.sumRegisterZero;
-            newState.carryFlag = newState.sumRegisterOverflow;
+            newState = handleOpcode(Opcodes.FI, 1, newState);
             newState.bus = newState.sumRegister;
             newState.aRegister = newState.bus;
             break;

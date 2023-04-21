@@ -70,6 +70,7 @@ export class State {
         copy.aRegister = this.aRegister;
         copy.bRegister = this.bRegister;
         copy.sumRegister = this.sumRegister;
+        copy.aluSubtract = this.aluSubtract;
         copy.sumRegisterOverflow = this.sumRegisterOverflow;
         copy.zeroFlag = this.zeroFlag;
         copy.outRegister = this.outRegister;
