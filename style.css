@@ -1,0 +1,29 @@
+.led {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 35%;
+}
+
+.green {
+    background-color: green;
+}
+
+.red {
+    background-color: red;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.yellow {
+    background-color: rgb(205, 205, 2);
+}
+
+.segment-display {
+    font-family: 'Seven Segment', sans-serif;
+    font-size: 50px;
+    color: red;
+}

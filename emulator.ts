@@ -1,6 +1,4 @@
-// TODO rename to next instruction, add subtract, add sumOverflow, sumZero, move logic to state
 // TODO unify vocabulary?
-// TODO rewrite using opcodes
 // TODO add instruction parser
 // TODO add UI
 // TODO add used resources
