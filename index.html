@@ -9,117 +9,190 @@
 
 <body>
     <div class="container">
-        <div class="bus">
-            <span class="title">Bus</span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
+        <div class="column">
+            <div class="clock module">
+                <span class="title">Clock</span>
+                <div class="leds">
+                    <span class="blue led"></span>
+                </div>
+            </div>
+            <div class="memory-address module">
+                <span class="title">Memory Address</span>
+                <div class="leds">
+                    <span class="yellow led"></span>
+                    <span class="yellow led"></span>
+                    <span class="yellow led"></span>
+                    <span class="yellow led"></span>
+                </div>
+            </div>
+            <div class="memory-content module">
+                <span class="title">Memory Content</span>
+                <div class="leds">
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                </div>
+            </div>
+            <div class="instruction-register module">
+                <span class="title">Instruction Register</span>
+                <div class="leds">
+                    <span class="yellow led"></span>
+                    <span class="yellow led"></span>
+                    <span class="yellow led"></span>
+                    <span class="yellow led"></span>
+                    <span class="green led"></span>
+                    <span class="green led"></span>
+                    <span class="green led"></span>
+                    <span class="green led"></span>
+                </div>
+            </div>
+            <div class="op-code-counter module">
+                <span class="title">OP Codes Counter</span>
+                <div class="leds">
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="green led"></span>
+                    <span class="green led"></span>
+                    <span class="green led"></span>
+                    <span class="green led"></span>
+                    <span class="green led"></span>
+                </div>
+                <div class="stickers">
+                    <span class="sticker2"></span>
+                    <span class="sticker2"></span>
+                    <span class="sticker2"></span>
+                    <span class="sticker2">T0</span>
+                    <span class="sticker2">T1</span>
+                    <span class="sticker2">T2</span>
+                    <span class="sticker2">T3</span>
+                    <span class="sticker2">T4</span>
+                </div>
+            </div>
         </div>
-        <div class="clock">
-            <span class="title">Clock</span>
-            <span class="blue led"></span>
+        <div class="column">
+            <div class="bus module">
+                <span class="title">Bus</span>
+                <div class="leds">
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                </div>
+            </div>
         </div>
-        <div class="memory-address">
-            <span class="title">Memory Address</span>
-            <span class="yellow led"></span>
-            <span class="yellow led"></span>
-            <span class="yellow led"></span>
-            <span class="yellow led"></span>
-        </div>
-        <div class="memory-content">
-            <span class="title">Memory Content</span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-        </div>
-        <div class="instruction-register">
-            <span class="title">Instruction Register</span>
-            <span class="yellow led"></span>
-            <span class="yellow led"></span>
-            <span class="yellow led"></span>
-            <span class="yellow led"></span>
-            <span class="green led"></span>
-            <span class="green led"></span>
-            <span class="green led"></span>
-            <span class="green led"></span>
-        </div>
-        <div class="counter">
-            <span class="title">Counter</span>
-            <span class="green led"></span>
-            <span class="green led"></span>
-            <span class="green led"></span>
-            <span class="green led"></span>
-        </div>
-        <div class="flags-register">
-            <span class="title">Flags Register</span>
-            <span class="green led"></span>
-            <span class="green led"></span>
-        </div>
-        <div class="a-register">
-            <span class="title">A Register</span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-        </div>
-        <div class="sum-register">
-            <span class="title">Sum Register</span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-        </div>
-        <div class="b-register">
-            <span class="title">B Register</span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-            <span class="red led"></span>
-        </div>
-        <div class="output">
-            <span class="title"Output></span>
-            <span class="segment-display">-150</span>
-        </div>
-        <div class="control-word">
-            <span class="title">Control Word</span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
-            <span class="blue led"></span>
+        <div class="column">
+            <div class="counter module">
+                <span class="title">Counter</span>
+                <div class="leds">
+                    <span class="green led"></span>
+                    <span class="green led"></span>
+                    <span class="green led"></span>
+                    <span class="green led"></span>
+                </div>
+            </div>
+            <div class="flags-register module">
+                <span class="title">Flags Register</span>
+                <div class="leds">
+                    <span class="green led"></span>
+                    <span class="green led"></span>
+                </div>
+                <div class="stickers">
+                    <span class="sticker">CF</span>
+                    <span class="sticker">ZF</span>
+                </div>
+            </div>
+            <div class="a-register module">
+                <span class="title">A Register</span>
+                <div class="leds">
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                </div>
+            </div>
+            <div class="sum-register module">
+                <span class="title">Sum Register</span>
+                <div class="leds">
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                </div>
+            </div>
+            <div class="b-register module">
+                <span class="title">B Register</span>
+                <div class="leds">
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                    <span class="red led"></span>
+                </div>
+            </div>
+            <div class="output module">
+                <span class="title">Output</span>
+                <span class="segment-display">-150</span>
+            </div>
+            <div class="control-word module">
+                <span class="title">Control Word</span>
+                <div class="leds">
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                </div>
+                <div class="stickers">
+                    <span class="sticker">HLT</span>
+                    <span class="sticker">MI</span>
+                    <span class="sticker">RI</span>
+                    <span class="sticker">RO</span>
+                    <span class="sticker">IO</span>
+                    <span class="sticker">II</span>
+                    <span class="sticker">AI</span>
+                    <span class="sticker">AO</span>
+                    <span class="sticker">EO</span>
+                    <span class="sticker">SU</span>
+                    <span class="sticker">BI</span>
+                    <span class="sticker">OI</span>
+                    <span class="sticker">CE</span>
+                    <span class="sticker">CO</span>
+                    <span class="sticker">J</span>
+                    <span class="sticker">FI</span>
+                </div>
+            </div>
         </div>
     </div>
 </body>
