@@ -140,7 +140,7 @@ body {
 }
 
 .green {
-    background-color: green;
+    background-color: #008000;
 }
 
 .red {
@@ -148,11 +148,15 @@ body {
 }
 
 .blue {
-    background-color: blue;
+    background-color: #007aff;
 }
 
 .yellow {
-    background-color: rgb(205, 205, 2);
+    background-color: #ffbf00;
+}
+
+.active {
+    opacity: 100%;
 }
 
 .segment-display {
