@@ -1,5 +1,5 @@
-import { getInitState, nextInstruction } from '../emulator';
-import { AddInstruction, HltInstruction, JcInstruction, JmpInstruction, JzInstruction, LdaInstruction, LdiInstruction, OutInstruction, StaInstruction, SubInstruction } from '../instructions';
+import { getInitState, nextInstruction } from '../src/emulator';
+import { AddInstruction, HltInstruction, JcInstruction, JmpInstruction, JzInstruction, LdaInstruction, LdiInstruction, OutInstruction, StaInstruction, SubInstruction } from '../src/instructions';
 
 describe('emulator tests', () => {
     test('init state', () => {

@@ -1,4 +1,4 @@
-import { LdaInstruction } from '../instructions';
+import { LdaInstruction } from '../src/instructions';
 
 describe('instruction tests', () => {
     test('lda instruction', () => {

@@ -1,5 +1,5 @@
-import { getInitState, run } from "../emulator";
-import { AddInstruction, HltInstruction, JcInstruction, JmpInstruction, JzInstruction, LdaInstruction, LdiInstruction, OutInstruction, StaInstruction, SubInstruction } from "../instructions";
+import { getInitState, run } from "../src/emulator";
+import { AddInstruction, HltInstruction, JcInstruction, JmpInstruction, JzInstruction, LdaInstruction, LdiInstruction, OutInstruction, StaInstruction, SubInstruction } from "../src/instructions";
 
 describe('testing instructions', () => {
     test('fibonacci sequence', () => {

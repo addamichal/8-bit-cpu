@@ -4,7 +4,7 @@
   "description": "",
   "main": "emulator.js",
   "scripts": {
-    "start": "ts-node-dev --respawn -- emulator.ts",
+    "start": "ts-node-dev --respawn -- ./src/emulator.ts",
     "test": "jest"
   },
   "repository": {
