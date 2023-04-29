@@ -8,6 +8,7 @@
 // set control word value
 // set op codes counter + rename it correctly based on ben eater's naming convention
 // add ui tests
+// use webpack?
 
 function setBinaryValue(module: string, number: number) {
     let leds = Array.from(document.querySelectorAll(`#${module} .led`)).reverse();
