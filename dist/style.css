@@ -159,7 +159,7 @@ body {
     opacity: 100%;
 }
 
-.segment-display {
+.seven-segment-display {
     font-family: 'Seven Segment', sans-serif;
     font-size: 4em;
     color: red;
