@@ -63,9 +63,9 @@ async function start() {
     let currentState = initState;
     while (currentState.halted !== 1) {
         await sleep(100);
-        setBinaryValue('clock', 0);
-        await sleep(100);
         setBinaryValue('clock', 1);
+        await sleep(100);
+        setBinaryValue('clock', 0);
 
         let nextState = nextInstruction(currentState);
         currentState = nextState;

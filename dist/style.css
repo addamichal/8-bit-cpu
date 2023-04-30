@@ -163,6 +163,11 @@ body {
     font-family: 'Seven Segment', sans-serif;
     font-size: 4em;
     color: red;
+    background-color: black;
+    display: block;
+    width: 4ch;
+    text-align: right;
+    padding: 3px;
 }
 
 .stickers {
