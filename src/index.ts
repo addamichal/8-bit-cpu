@@ -1,17 +1,3 @@
-// TODO
-// add / generate favicon
-// bus column should fix the size of bus, other 2 columns should be uniform
-// rewrite to typescript
-// connect to actual execution code
-// optimize for phones
-// set output value
-// set control word value
-// set op codes counter + rename it correctly based on ben eater's naming convention
-// add ui tests
-// use webpack?
-// add prettier
-// improve webpack, generate css and html?
-
 import { getInitState, nextInstruction, run } from "./emulator";
 import { AddInstruction, HltInstruction, JcInstruction, JmpInstruction, LdaInstruction, LdiInstruction, OutInstruction, StaInstruction } from "./instructions";
 import { State } from "./state";
@@ -76,16 +62,15 @@ async function start() {
 
     let currentState = initState;
     while (currentState.halted !== 1) {
+        await sleep(100);
         setBinaryValue('clock', 0);
-        await sleep(200);
+        await sleep(100);
+        setBinaryValue('clock', 1);
 
         let nextState = nextInstruction(currentState);
         currentState = nextState;
 
         updateUI(currentState);
-        setBinaryValue('clock', 1);
-
-        await sleep(200);
     }
 }
 
