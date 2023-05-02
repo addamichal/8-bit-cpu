@@ -1,4 +1,3 @@
-refactor clock
 set control word value
 bus column should fix the size of bus, other 2 columns should be uniform
 

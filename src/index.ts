@@ -12,7 +12,7 @@ function setBinaryValue(module: string, number: number) {
     }
 
     let digits = number.toString(2).split('').reverse();
-    if (digits.length > leds.length) throw new Error(`Number exceeds bits of module`);
+    if (digits.length > leds.length) throw new Error(`Number: ${number} exceeds bits of module ${module}`);
 
     for (let i = 0; i < digits.length; i++) {
         if (digits[i] === '1') {
@@ -87,8 +87,14 @@ function sleep(ms: number) {
 
 async function start() {
     let initState = getInitState();
-    initState.ram[0] = new AddInstruction(15).toNumber();
-    initState.ram[1] = new HltInstruction().toNumber();
+    updateUI(initState);
+
+    initState.ram[0] = new LdiInstruction(15).toNumber();
+    initState.ram[1] = new OutInstruction().toNumber();
+    initState.ram[2] = new HltInstruction().toNumber();
+
+    //initState.ram[0] = new AddInstruction(15).toNumber();
+    //initState.ram[1] = new HltInstruction().toNumber();
 
     // initState.ram[0] = new HltInstruction().toNumber();
 
