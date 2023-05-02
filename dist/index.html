@@ -46,17 +46,17 @@
             <div id="instruction-register" class="module">
                 <span class="title">Instruction Register</span>
                 <div class="leds">
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
+                    <span class="blue led"></span>
                     <span class="yellow led"></span>
                     <span class="yellow led"></span>
                     <span class="yellow led"></span>
                     <span class="yellow led"></span>
-                    <span class="green led"></span>
-                    <span class="green led"></span>
-                    <span class="green led"></span>
-                    <span class="green led"></span>
                 </div>
             </div>
-            <div class="op-code-counter module">
+            <div id="op-code-counter" class="module">
                 <span class="title">OP Codes Counter</span>
                 <div class="leds">
                     <span class="red led"></span>
@@ -105,7 +105,7 @@
                     <span class="green led"></span>
                 </div>
             </div>
-            <div class="flags-register module">
+            <div id="flags-register" class="module">
                 <span class="title">Flags Register</span>
                 <div class="leds">
                     <span class="green led"></span>
@@ -157,7 +157,12 @@
             </div>
             <div class="output module">
                 <span class="title">Output</span>
-                <span class="seven-segment-display">0</span>
+                <div class="seven-segment-display">
+                    <span class="seven-segment-display-digit"></span>
+                    <span class="seven-segment-display-digit"></span>
+                    <span class="seven-segment-display-digit"></span>
+                    <span class="seven-segment-display-digit">0</span>
+                </div>
             </div>
             <div class="control-word module">
                 <span class="title">Control Word</span>

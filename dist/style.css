@@ -160,12 +160,17 @@ body {
 }
 
 .seven-segment-display {
+    display: flex;
+}
+
+.seven-segment-display-digit {
     font-family: 'Seven Segment', sans-serif;
     font-size: 4em;
     color: red;
     background-color: black;
-    display: block;
-    width: 4ch;
+    width: 1ch;
+    line-height: 1;
+    height: 1em;
     text-align: right;
     padding: 3px;
 }

@@ -1,13 +1,18 @@
-add / generate favicon
 refactor clock
-bus column should fix the size of bus, other 2 columns should be uniform
-optimize for phones
-improve output value UI, recreate as 4 digits
 set control word value
-set op codes counter + rename it correctly based on ben eater's naming convention
-set flags registers
+bus column should fix the size of bus, other 2 columns should be uniform
+
+rename op-codes counter correctly based on ben eater's naming convention
+add / generate favicon
+optimize for phones
 add ui tests
 add prettier
 improve webpack, generate css and html?
 setup ci/cd process using github actions
 host
+unify vocabulary?
+add instruction parser
+add used resources
+add readme
+more sample programs?
+snake or game of life?

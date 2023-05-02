@@ -1,11 +1,3 @@
-// TODO unify vocabulary?
-// TODO add instruction parser
-// TODO add UI
-// TODO add used resources
-// TODO add readme
-// TODO more sample programs?
-// todo snake or game of life?
-
 import { InstructionCodes, Opcodes } from "./instructions";
 import { State } from "./state";
 
