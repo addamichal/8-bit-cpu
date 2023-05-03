@@ -1,23 +1,23 @@
-export enum Opcodes {
-    HLT,
-    MI,
-    RI,
-    RO,
-    IO,
-    II,
-    AI,
-    AO,
-    EO,
-    SU,
-    BI,
-    OI,
-    CE,
-    CO,
-    J,
-    FI
+export enum OpCode {
+    HLT = 'HLT',
+    MI = 'MI',
+    RI = 'RI',
+    RO = 'RO',
+    IO = 'IO',
+    II = 'II',
+    AI = 'AI',
+    AO = 'AO',
+    EO = 'EO',
+    SU = 'SU',
+    BI = 'BI',
+    OI = 'OI',
+    CE = 'CE',
+    CO = 'CO',
+    J = 'J',
+    FI = 'FI'
 }
 
-export enum InstructionCodes {
+export enum InstructionCode {
     NOP = 0,     // 0000
     LDA = 1,     // 0001
     ADD = 2,     // 0010
@@ -32,7 +32,7 @@ export enum InstructionCodes {
 }
 
 export class Instruction {
-    instructionCode: InstructionCodes
+    instructionCode: InstructionCode
     value: number;
 
     constructor(instructionCode: number, value: number) {
@@ -50,66 +50,66 @@ export class Instruction {
 
 export class NopInstruction extends Instruction {
     constructor() {
-        super(InstructionCodes.NOP, 0);
+        super(InstructionCode.NOP, 0);
     }
 }
 
 export class LdaInstruction extends Instruction {
     constructor(value: number) {
-        super(InstructionCodes.LDA, value);
+        super(InstructionCode.LDA, value);
     }
 }
 
 export class StaInstruction extends Instruction {
     constructor(value: number) {
-        super(InstructionCodes.STA, value);
+        super(InstructionCode.STA, value);
     }
 }
 
 export class LdiInstruction extends Instruction {
     constructor(value: number) {
-        super(InstructionCodes.LDI, value);
+        super(InstructionCode.LDI, value);
     }
 }
 
 export class HltInstruction extends Instruction {
     constructor() {
-        super(InstructionCodes.HLT, 0);
+        super(InstructionCode.HLT, 0);
     }
 }
 
 export class AddInstruction extends Instruction {
     constructor(value: number) {
-        super(InstructionCodes.ADD, value);
+        super(InstructionCode.ADD, value);
     }
 }
 
 export class SubInstruction extends Instruction {
     constructor(value: number) {
-        super(InstructionCodes.SUB, value);
+        super(InstructionCode.SUB, value);
     }
 }
 
 export class JmpInstruction extends Instruction {
     constructor(value: number) {
-        super(InstructionCodes.JMP, value);
+        super(InstructionCode.JMP, value);
     }
 }
 
 export class JcInstruction extends Instruction {
     constructor(value: number) {
-        super(InstructionCodes.JC, value);
+        super(InstructionCode.JC, value);
     }
 }
 
 export class JzInstruction extends Instruction {
     constructor(value: number) {
-        super(InstructionCodes.JZ, value);
+        super(InstructionCode.JZ, value);
     }
 }
 
 export class OutInstruction extends Instruction {
     constructor() {
-        super(InstructionCodes.OUT, 0);
+        super(InstructionCode.OUT, 0);
     }
 }

@@ -1,3 +1,24 @@
+export class ControlWord {
+    [key: string]: number;
+
+    HLT = 0;
+    MI = 0;
+    RI = 0;
+    RO = 0;
+    IO = 0;
+    II = 0;
+    AI = 0;
+    AO = 0;
+    EO = 0;
+    SU = 0;
+    BI = 0;
+    OI = 0;
+    CE = 0;
+    CO = 0;
+    J = 0;
+    FI = 0;
+}
+
 export class State {
     private $_aRegister: number = 0;
     private $_bRegister: number = 0;
@@ -51,10 +72,14 @@ export class State {
     carryFlag: number = 0;
     zeroFlag: number = 0;
 
+    controlWord: ControlWord;
+
     constructor() {
         for (let i = 0; i < 16; i++) {
             this.ram[i] = 0;
         }
+
+        this.controlWord = new ControlWord();
     }
 
     copy(): State {
@@ -76,6 +101,7 @@ export class State {
         copy.outRegister = this.outRegister;
         copy.carryFlag = this.carryFlag;
         copy.zeroFlag = this.zeroFlag;
+        copy.controlWord = this.controlWord;
 
         return copy;
     }

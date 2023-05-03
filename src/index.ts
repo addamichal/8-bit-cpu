@@ -1,6 +1,6 @@
-import { getInitState, handleOpcodes, nextInstruction, run } from "./emulator";
+import { getInitState, handleOpcodes } from "./emulator";
 import { AddInstruction, HltInstruction, JcInstruction, JmpInstruction, LdaInstruction, LdiInstruction, OutInstruction, StaInstruction } from "./instructions";
-import { State } from "./state";
+import { ControlWord, State } from "./state";
 
 function setBinaryValue(module: string, number: number) {
     let moduleDiv = document.querySelector(`#${module}`) as HTMLDivElement;
@@ -58,6 +58,29 @@ function setOpCodesCounter(value: number) {
     setBinaryValue('op-code-counter', decimalNumber);
 }
 
+function setControlWord(controlWord: ControlWord) {
+    let binaryNumber = '';
+    binaryNumber += controlWord.HLT;
+    binaryNumber += controlWord.MI;
+    binaryNumber += controlWord.RI;
+    binaryNumber += controlWord.RO;
+    binaryNumber += controlWord.IO;
+    binaryNumber += controlWord.II;
+    binaryNumber += controlWord.AI;
+    binaryNumber += controlWord.AO;
+    binaryNumber += controlWord.EO;
+    binaryNumber += controlWord.SU;
+    binaryNumber += controlWord.BI;
+    binaryNumber += controlWord.OI;
+    binaryNumber += controlWord.CE;
+    binaryNumber += controlWord.CO;
+    binaryNumber += controlWord.J;
+    binaryNumber += controlWord.FI;
+
+    let decimalNumber = Number.parseInt(binaryNumber, 2);
+    setBinaryValue('control-word', decimalNumber);
+}
+
 function updateUI(state: State) {
     setBinaryValue('memory-address', state.memoryAddress);
     setBinaryValue('memory-content', state.memoryContent);
@@ -72,6 +95,7 @@ function updateUI(state: State) {
     setBinaryValue('sum-register', state.sumRegister);
     setBinaryValue('b-register', state.bRegister);
     setOutputValue(state.outRegister);
+    setControlWord(state.controlWord);
 }
 
 async function pulseClock(delay: number) {

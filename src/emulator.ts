@@ -1,5 +1,5 @@
-import { InstructionCodes, Opcodes } from "./instructions";
-import { State } from "./state";
+import { InstructionCode, OpCode } from "./instructions";
+import { ControlWord, State } from "./state";
 
 export function run(initState: State): State {
     let currentState = initState;
@@ -11,81 +11,83 @@ export function run(initState: State): State {
     return currentState;
 }
 
-export function handleOpcode(opcode: Opcodes, opCodeValue: number, currentState: State): State {
+export function handleOpcode(opcode: OpCode, opCodeValue: number, currentState: State): State {
     let newState = currentState.copy();
+    newState.controlWord[opcode] = opCodeValue;
+
     switch (opcode) {
-        case Opcodes.HLT:
+        case OpCode.HLT:
             newState.halted = opCodeValue;
             return newState;
-        case Opcodes.MI:
+        case OpCode.MI:
             if (opCodeValue) {
                 newState.memoryAddress = newState.bus;
             }
             return newState;
-        case Opcodes.RI:
+        case OpCode.RI:
             if (opCodeValue) {
                 newState.memoryContent = newState.bus;
             }
             return newState;
-        case Opcodes.RO:
+        case OpCode.RO:
             if (opCodeValue) {
                 newState.bus = newState.memoryContent;
             }
             return newState;
-        case Opcodes.IO:
+        case OpCode.IO:
             if (opCodeValue) {
                 newState.bus = newState.instructionRegister & 15;
             }
             return newState;
-        case Opcodes.II:
+        case OpCode.II:
             if (opCodeValue) {
                 newState.instructionRegister = newState.bus;
             }
             return newState;
-        case Opcodes.AI:
+        case OpCode.AI:
             if (opCodeValue) {
                 newState.aRegister = newState.bus;
             }
             return newState;
-        case Opcodes.AO:
+        case OpCode.AO:
             if (opCodeValue) {
                 newState.bus = newState.aRegister;
             }
             return newState;
-        case Opcodes.EO:
+        case OpCode.EO:
             if (opCodeValue) {
                 newState.bus = newState.sumRegister;
             }
             return newState;
-        case Opcodes.SU:
+        case OpCode.SU:
             newState.aluSubtract = opCodeValue;
             return newState;
-        case Opcodes.BI:
+        case OpCode.BI:
             if (opCodeValue) {
                 newState.bRegister = newState.bus;
             }
             return newState;
-        case Opcodes.OI:
+        case OpCode.OI:
             if (opCodeValue) {
                 newState.outRegister = newState.bus;
             }
             return newState;
-        case Opcodes.CE:
+        case OpCode.CE:
             if (opCodeValue) {
                 newState.counter = (newState.counter + 1) & 15;
             }
             return newState;
-        case Opcodes.CO:
+        case OpCode.CO:
             if (opCodeValue) {
                 newState.bus = newState.counter;
             }
             return newState;
-        case Opcodes.J:
+        case OpCode.J:
             if (opCodeValue) {
                 newState.counter = newState.bus;
             }
             return newState;
-        case Opcodes.FI:
+        case OpCode.FI:
             if (opCodeValue) {
                 newState.zeroFlag = newState.sumRegisterZero;
                 newState.carryFlag = newState.sumRegisterOverflow;
@@ -98,131 +100,135 @@ export function handleOpcode(opcode: Opcodes, opCodeValue: number, currentState:
 
 export function handleOpcodes(currentState: State): State {
     let newState: State = currentState.copy();
+    newState.controlWord = new ControlWord();
 
     // MI|CO
     if (currentState.opcodeCounter === 0) {
-        newState = handleOpcode(Opcodes.CO, 1, newState);
-        newState = handleOpcode(Opcodes.MI, 1, newState);
+        newState = handleOpcode(OpCode.CO, 1, newState);
+        newState = handleOpcode(OpCode.MI, 1, newState);
     }
 
     // RO|II|CE
     if (currentState.opcodeCounter === 1) {
-        newState = handleOpcode(Opcodes.RO, 1, newState);
-        newState = handleOpcode(Opcodes.II, 1, newState);
-        newState = handleOpcode(Opcodes.CE, 1, newState);
+        newState = handleOpcode(OpCode.RO, 1, newState);
+        newState = handleOpcode(OpCode.II, 1, newState);
+        newState = handleOpcode(OpCode.CE, 1, newState);
     }
 
     let instruction = newState.instructionRegister >> 4;
     switch (instruction) {
-        case InstructionCodes.NOP:
+        case InstructionCode.NOP:
             break;
-        case InstructionCodes.LDA:
+        case InstructionCode.LDA:
             // IO|MI
             if (newState.opcodeCounter === 2) {
-                newState = handleOpcode(Opcodes.IO, 1, newState);
-                newState = handleOpcode(Opcodes.MI, 1, newState);
+                newState = handleOpcode(OpCode.IO, 1, newState);
+                newState = handleOpcode(OpCode.MI, 1, newState);
+
+                newState.controlWord.IO = 1;
+                newState.controlWord.MI = 1;
             }
 
             // RO|AI
             if (newState.opcodeCounter === 3) {
-                newState = handleOpcode(Opcodes.RO, 1, newState);
-                newState = handleOpcode(Opcodes.AI, 1, newState);
+                newState = handleOpcode(OpCode.RO, 1, newState);
+                newState = handleOpcode(OpCode.AI, 1, newState);
             }
             break;
-        case InstructionCodes.ADD:
+        case InstructionCode.ADD:
             // IO|MI
             if (newState.opcodeCounter === 2) {
-                newState = handleOpcode(Opcodes.IO, 1, newState);
-                newState = handleOpcode(Opcodes.MI, 1, newState);
+                newState = handleOpcode(OpCode.IO, 1, newState);
+                newState = handleOpcode(OpCode.MI, 1, newState);
             }
 
             // RO|BI
             if (newState.opcodeCounter === 3) {
-                newState = handleOpcode(Opcodes.RO, 1, newState);
-                newState = handleOpcode(Opcodes.BI, 1, newState);
+                newState = handleOpcode(OpCode.RO, 1, newState);
+                newState = handleOpcode(OpCode.BI, 1, newState);
             }
 
             // EO|AI|FI
             if (newState.opcodeCounter === 4) {
-                newState = handleOpcode(Opcodes.SU, 0, newState);
-                newState = handleOpcode(Opcodes.EO, 1, newState);
-                newState = handleOpcode(Opcodes.FI, 1, newState);
-                newState = handleOpcode(Opcodes.AI, 1, newState);
+                newState = handleOpcode(OpCode.SU, 0, newState);
+                newState = handleOpcode(OpCode.EO, 1, newState);
+                newState = handleOpcode(OpCode.FI, 1, newState);
+                newState = handleOpcode(OpCode.AI, 1, newState);
             }
             break;
-        case InstructionCodes.SUB:
+        case InstructionCode.SUB:
             // IO|MI
             if (newState.opcodeCounter === 2) {
-                newState = handleOpcode(Opcodes.IO, 1, newState);
-                newState = handleOpcode(Opcodes.MI, 1, newState);
+                newState = handleOpcode(OpCode.IO, 1, newState);
+                newState = handleOpcode(OpCode.MI, 1, newState);
             }
 
             // RO|BI
             if (newState.opcodeCounter === 3) {
-                newState = handleOpcode(Opcodes.RO, 1, newState);
-                newState = handleOpcode(Opcodes.BI, 1, newState);
+                newState = handleOpcode(OpCode.RO, 1, newState);
+                newState = handleOpcode(OpCode.BI, 1, newState);
             }
 
             // EO|AI|SU|FI
             if (newState.opcodeCounter === 4) {
-                newState = handleOpcode(Opcodes.SU, 1, newState);
-                newState = handleOpcode(Opcodes.EO, 1, newState);
-                newState = handleOpcode(Opcodes.FI, 1, newState);
-                newState = handleOpcode(Opcodes.AI, 1, newState);
+                newState = handleOpcode(OpCode.SU, 1, newState);
+                newState = handleOpcode(OpCode.EO, 1, newState);
+                newState = handleOpcode(OpCode.FI, 1, newState);
+                newState = handleOpcode(OpCode.AI, 1, newState);
             }
             break;
-        case InstructionCodes.STA:
+        case InstructionCode.STA:
             // IO|MI
             if (newState.opcodeCounter === 2) {
-                newState = handleOpcode(Opcodes.IO, 1, newState);
-                newState = handleOpcode(Opcodes.MI, 1, newState);
+                newState = handleOpcode(OpCode.IO, 1, newState);
+                newState = handleOpcode(OpCode.MI, 1, newState);
             }
 
             // AO|RI
             if (newState.opcodeCounter === 3) {
-                newState = handleOpcode(Opcodes.AO, 1, newState);
-                newState = handleOpcode(Opcodes.RI, 1, newState);
+                newState = handleOpcode(OpCode.AO, 1, newState);
+                newState = handleOpcode(OpCode.RI, 1, newState);
             }
             break;
-        case InstructionCodes.LDI:
+        case InstructionCode.LDI:
             // IO|AI
             if (newState.opcodeCounter === 2) {
-                newState = handleOpcode(Opcodes.IO, 1, newState);
-                newState = handleOpcode(Opcodes.AI, 1, newState);
+                newState = handleOpcode(OpCode.IO, 1, newState);
+                newState = handleOpcode(OpCode.AI, 1, newState);
             }
             break;
-        case InstructionCodes.JMP:
+        case InstructionCode.JMP:
             // IO|J
             if (newState.opcodeCounter === 2) {
-                newState = handleOpcode(Opcodes.IO, 1, newState);
-                newState = handleOpcode(Opcodes.J, 1, newState);
+                newState = handleOpcode(OpCode.IO, 1, newState);
+                newState = handleOpcode(OpCode.J, 1, newState);
             }
             break;
-        case InstructionCodes.JC:
+        case InstructionCode.JC:
             if (newState.carryFlag && newState.opcodeCounter === 2) {
                 // IO|J
-                newState = handleOpcode(Opcodes.IO, 1, newState);
-                newState = handleOpcode(Opcodes.J, 1, newState);
+                newState = handleOpcode(OpCode.IO, 1, newState);
+                newState = handleOpcode(OpCode.J, 1, newState);
             }
             break;
-        case InstructionCodes.JZ:
+        case InstructionCode.JZ:
             if (newState.zeroFlag && newState.opcodeCounter === 2) {
                 // IO|J
-                newState = handleOpcode(Opcodes.IO, 1, newState);
-                newState = handleOpcode(Opcodes.J, 1, newState);
+                newState = handleOpcode(OpCode.IO, 1, newState);
+                newState = handleOpcode(OpCode.J, 1, newState);
             }
             break;
-        case InstructionCodes.OUT:
+        case InstructionCode.OUT:
             // AO|OI
             if (newState.opcodeCounter === 2) {
-                newState = handleOpcode(Opcodes.AO, 1, newState);
-                newState = handleOpcode(Opcodes.OI, 1, newState);
+                newState = handleOpcode(OpCode.AO, 1, newState);
+                newState = handleOpcode(OpCode.OI, 1, newState);
             }
             break;
-        case InstructionCodes.HLT:
+        case InstructionCode.HLT:
             // HLT
             if (newState.opcodeCounter === 2) {
-                newState = handleOpcode(Opcodes.HLT, 1, newState);
+                newState = handleOpcode(OpCode.HLT, 1, newState);
             }
             break;
         default:
