@@ -1,6 +1,3 @@
-set control word value
-bus column should fix the size of bus, other 2 columns should be uniform
-
 rename op-codes counter correctly based on ben eater's naming convention
 add / generate favicon
 optimize for phones
