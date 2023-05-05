@@ -1,5 +1,5 @@
 import { InstructionCode, OpCode } from "./instructions";
-import { ControlWord, State } from "./state";
+import { State } from "./state";
 
 export function run(initState: State): State {
     let currentState = initState;
@@ -20,12 +20,12 @@ export function handleOpcode(opcode: OpCode, opCodeValue: number, currentState: 
             newState.halted = opCodeValue;
             return newState;
         case OpCode.MI:
-            if (opCodeValue) {
+            if (opCodeValue && newState.clock) {
                 newState.memoryAddress = newState.bus;
             }
             return newState;
         case OpCode.RI:
-            if (opCodeValue) {
+            if (opCodeValue && newState.clock) {
                 newState.memoryContent = newState.bus;
             }
             return newState;
@@ -40,12 +40,12 @@ export function handleOpcode(opcode: OpCode, opCodeValue: number, currentState: 
             }
             return newState;
         case OpCode.II:
-            if (opCodeValue) {
+            if (opCodeValue && newState.clock) {
                 newState.instructionRegister = newState.bus;
             }
             return newState;
         case OpCode.AI:
-            if (opCodeValue) {
+            if (opCodeValue && newState.clock) {
                 newState.aRegister = newState.bus;
             }
             return newState;
@@ -63,17 +63,17 @@ export function handleOpcode(opcode: OpCode, opCodeValue: number, currentState: 
             newState.aluSubtract = opCodeValue;
             return newState;
         case OpCode.BI:
-            if (opCodeValue) {
+            if (opCodeValue && newState.clock) {
                 newState.bRegister = newState.bus;
             }
             return newState;
         case OpCode.OI:
-            if (opCodeValue) {
+            if (opCodeValue && newState.clock) {
                 newState.outRegister = newState.bus;
             }
             return newState;
         case OpCode.CE:
-            if (opCodeValue) {
+            if (opCodeValue && newState.clock) {
                 newState.counter = (newState.counter + 1) & 15;
             }
             return newState;
@@ -83,12 +83,12 @@ export function handleOpcode(opcode: OpCode, opCodeValue: number, currentState: 
             }
             return newState;
         case OpCode.J:
-            if (opCodeValue) {
+            if (opCodeValue && newState.clock) {
                 newState.counter = newState.bus;
             }
             return newState;
         case OpCode.FI:
-            if (opCodeValue) {
+            if (opCodeValue && newState.clock) {
                 newState.zeroFlag = newState.sumRegisterZero;
                 newState.carryFlag = newState.sumRegisterOverflow;
             }
@@ -100,16 +100,27 @@ export function handleOpcode(opcode: OpCode, opCodeValue: number, currentState: 
 
 export function handleOpcodes(currentState: State): State {
     let newState: State = currentState.copy();
-    newState.controlWord = new ControlWord();
+    newState.clock = currentState.clock === 1 ? 0 : 1;
+
+    if (currentState.clock === 1) {
+        newState.opcodeCounter++;
+        if (newState.opcodeCounter === 5) {
+            newState.opcodeCounter = 0;
+        }
+
+        newState.clock = 0;
+    }
+
+    newState.bus = 0;
 
     // MI|CO
-    if (currentState.opcodeCounter === 0) {
+    if (newState.opcodeCounter === 0) {
         newState = handleOpcode(OpCode.CO, 1, newState);
         newState = handleOpcode(OpCode.MI, 1, newState);
     }
 
     // RO|II|CE
-    if (currentState.opcodeCounter === 1) {
+    if (newState.opcodeCounter === 1) {
         newState = handleOpcode(OpCode.RO, 1, newState);
         newState = handleOpcode(OpCode.II, 1, newState);
         newState = handleOpcode(OpCode.CE, 1, newState);
@@ -243,11 +254,11 @@ export function nextInstruction(currentState: State): State {
     nextState.opcodeCounter = 0;
 
     for (let i = 0; i < 5; i++) {
-        nextState = handleOpcodes(nextState);
-        nextState.opcodeCounter++;
+        nextState = handleOpcodes(nextState); // 0 -> 1
+        nextState = handleOpcodes(nextState); // 1 -> 0
     }
 
-    nextState.opcodeCounter = 0;
+    nextState.opcodeCounter = 1;
 
     return nextState;
 }

@@ -4,11 +4,12 @@ import { ControlWord, State } from "./state";
 
 let paused = 0;
 let state: State = init();
-let speed = 500;
+let speed = 10;
 
 document.querySelector('#startBtn')?.addEventListener('click', start);
 document.querySelector('#pauseBtn')?.addEventListener('click', pause);
 document.querySelector('#pulseClockBtn')?.addEventListener('click', pulseClock);
+document.querySelector('#toggleClockBtn')?.addEventListener('click', toggleClock);
 document.querySelector('#resetBtn')?.addEventListener('click', () => {
     state = init();
 });
@@ -93,6 +94,7 @@ function setControlWord(controlWord: ControlWord) {
 }
 
 function updateUI(state: State) {
+    setBinaryValue('clock', state.clock);
     setBinaryValue('memory-address', state.memoryAddress);
     setBinaryValue('memory-content', state.memoryContent);
     setBinaryValue('instruction-register', state.instructionRegister);
@@ -111,61 +113,51 @@ function updateUI(state: State) {
 
 function init(): State {
     let state = getInitState();
-    state.ram[0] = new LdiInstruction(15).toNumber();
-    state.ram[1] = new OutInstruction().toNumber();
-    state.ram[2] = new HltInstruction().toNumber();
+    // state.ram[0] = new HltInstruction().toNumber();
 
-    //state.ram[0] = new AddInstruction(15).toNumber();
-    //state.ram[1] = new HltInstruction().toNumber();
+    // state.ram[0] = new LdiInstruction(15).toNumber();
+    // state.ram[1] = new OutInstruction().toNumber();
+    // state.ram[2] = new HltInstruction().toNumber();
+
+    // state.ram[0] = new AddInstruction(15).toNumber();
+    // state.ram[1] = new HltInstruction().toNumber();
 
     // state.ram[0] = new HltInstruction().toNumber();
 
-    //state.ram[0] = new LdiInstruction(1).toNumber();
-    //state.ram[1] = new StaInstruction(14).toNumber();
-    //state.ram[2] = new LdiInstruction(0).toNumber();
-    //state.ram[3] = new StaInstruction(15).toNumber();
-    //state.ram[4] = new OutInstruction().toNumber();
-    //state.ram[5] = new LdaInstruction(14).toNumber();
-    //state.ram[6] = new AddInstruction(15).toNumber();
-    //state.ram[7] = new StaInstruction(14).toNumber();
-    //state.ram[8] = new OutInstruction().toNumber();
-    //state.ram[9] = new LdaInstruction(15).toNumber();
-    //state.ram[10] = new AddInstruction(14).toNumber();
-    //state.ram[11] = new JcInstruction(13).toNumber();
-    //state.ram[12] = new JmpInstruction(3).toNumber();
-    //state.ram[13] = new HltInstruction().toNumber();
+    state.ram[0] = new LdiInstruction(1).toNumber();
+    state.ram[1] = new StaInstruction(14).toNumber();
+    state.ram[2] = new LdiInstruction(0).toNumber();
+    state.ram[3] = new StaInstruction(15).toNumber();
+    state.ram[4] = new OutInstruction().toNumber();
+    state.ram[5] = new LdaInstruction(14).toNumber();
+    state.ram[6] = new AddInstruction(15).toNumber();
+    state.ram[7] = new StaInstruction(14).toNumber();
+    state.ram[8] = new OutInstruction().toNumber();
+    state.ram[9] = new LdaInstruction(15).toNumber();
+    state.ram[10] = new AddInstruction(14).toNumber();
+    state.ram[11] = new JcInstruction(13).toNumber();
+    state.ram[12] = new JmpInstruction(3).toNumber();
+    state.ram[13] = new HltInstruction().toNumber();
 
-    state = handleOpCodesUI(state);
+    updateUI(state);
+
     return state;
 }
 
 async function pulseClock() {
-    console.log('pulseClock');
+    toggleClock();
+    await sleep(speed);
+    toggleClock();
+}
 
+function toggleClock() {
     if (state.halted === 1) {
         console.log('halted!')
         return;
     }
 
-    console.log('pulse!');
-    await sleep(speed / 2);
-    setBinaryValue('clock', 1);
-    await sleep(speed / 2);
-    setBinaryValue('clock', 0);
-
-    state = handleOpCodesUI(state);
-}
-
-function handleOpCodesUI(state: State) {
     state = handleOpcodes(state);
     updateUI(state);
-
-    state.opcodeCounter++;
-    if (state.opcodeCounter === 5) {
-        state.opcodeCounter = 0;
-    }
-
-    return state;
 }
 
 function sleep(ms: number) {

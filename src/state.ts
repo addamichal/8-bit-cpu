@@ -1,3 +1,5 @@
+import { InstructionCode } from "./instructions";
+
 export class ControlWord {
     [key: string]: number;
 
@@ -74,14 +76,120 @@ export class State {
     carryFlag: number = 0;
     zeroFlag: number = 0;
 
-    controlWord: ControlWord;
+    get controlWord(): ControlWord {
+        let controlWord = new ControlWord();
+        if (this.opcodeCounter === 0) {
+            controlWord.CO = 1;
+            controlWord.MI = 1;
+        }
+        if (this.opcodeCounter === 1) {
+            controlWord.RO = 1;
+            controlWord.II = 1;
+            controlWord.CE = 1;
+        }
+
+        let instruction = this.instructionRegister >> 4;
+        switch (instruction) {
+            case InstructionCode.NOP:
+                break;
+            case InstructionCode.LDA:
+                if (this.opcodeCounter === 2) {
+                    controlWord.IO = 1;
+                    controlWord.MI = 1;
+                }
+                if (this.opcodeCounter === 3) {
+                    controlWord.RO = 1;
+                    controlWord.AI = 1;
+                }
+                break;
+            case InstructionCode.ADD:
+                if (this.opcodeCounter === 2) {
+                    controlWord.IO = 1;
+                    controlWord.MI = 1;
+                }
+                if (this.opcodeCounter === 3) {
+                    controlWord.RO = 1;
+                    controlWord.BI = 1;
+                }
+                if (this.opcodeCounter === 4) {
+                    controlWord.SU = 0;
+                    controlWord.EO = 1;
+                    controlWord.FI = 1;
+                    controlWord.AI = 1;
+                }
+                break;
+            case InstructionCode.SUB:
+                if (this.opcodeCounter === 2) {
+                    controlWord.IO = 1;
+                    controlWord.MI = 1;
+                }
+                if (this.opcodeCounter === 3) {
+                    controlWord.RO = 1;
+                    controlWord.BI = 1;
+                }
+                if (this.opcodeCounter === 4) {
+                    controlWord.SU = 0;
+                    controlWord.EO = 1;
+                    controlWord.FI = 1;
+                    controlWord.AI = 1;
+                }
+                break;
+            case InstructionCode.STA:
+                if (this.opcodeCounter === 2) {
+                    controlWord.IO = 1;
+                    controlWord.MI = 1;
+                }
+                if (this.opcodeCounter === 3) {
+                    controlWord.AO = 1;
+                    controlWord.RI = 1;
+                }
+                break;
+            case InstructionCode.LDI:
+                // IO|AI
+                if (this.opcodeCounter === 2) {
+                    controlWord.IO = 1;
+                    controlWord.AI = 1;
+                }
+                break;
+            case InstructionCode.JMP:
+                // IO|J
+                if (this.opcodeCounter === 2) {
+                    controlWord.IO = 1;
+                    controlWord.J = 1;
+                }
+                break;
+            case InstructionCode.JC:
+                if (this.carryFlag && this.opcodeCounter === 2) {
+                    controlWord.IO = 1;
+                    controlWord.J = 1;
+                }
+                break;
+            case InstructionCode.JZ:
+                if (this.zeroFlag && this.opcodeCounter === 2) {
+                    controlWord.IO = 1;
+                    controlWord.J = 1;
+                }
+                break;
+            case InstructionCode.OUT:
+                if (this.opcodeCounter === 2) {
+                    controlWord.AO = 1;
+                    controlWord.OI = 1;
+                }
+                break;
+            case InstructionCode.HLT:
+                // HLT
+                if (this.opcodeCounter === 2) {
+                    controlWord.HLT = 1;
+                }
+                break;
+        }
+        return controlWord;
+    }
 
     constructor() {
         for (let i = 0; i < 16; i++) {
             this.ram[i] = 0;
         }
-
-        this.controlWord = new ControlWord();
     }
 
     copy(): State {
@@ -104,7 +212,6 @@ export class State {
         copy.outRegister = this.outRegister;
         copy.carryFlag = this.carryFlag;
         copy.zeroFlag = this.zeroFlag;
-        copy.controlWord = this.controlWord;
 
         return copy;
     }

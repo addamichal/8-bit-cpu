@@ -1,3 +1,6 @@
+Counter next to instruction register
+BUG - bus is not a register, should be zeroed out every time
+
 BUG - clock raises are not working correctly
 FIX? - clock should be part of state? should take clock into consideration
 
