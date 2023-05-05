@@ -96,14 +96,17 @@ table {
     border-spacing: 0;
 }
 
-/* Set Open Sans as the default font */
 body {
     font-family: monospace;
     display: flex;
     justify-content: center;
+    flex-direction: column;
 }
 
-/* custom styles */
+.controls {
+    margin: 15px auto;
+}
+
 .container {
     display: grid;
     grid-auto-flow: column;

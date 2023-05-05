@@ -1,3 +1,8 @@
+BUG - clock raises are not working correctly
+FIX? - clock should be part of state? should take clock into consideration
+
+some debugging options - next instruction, stop, run
+
 rename op-codes counter correctly based on ben eater's naming convention
 add / generate favicon
 optimize for phones

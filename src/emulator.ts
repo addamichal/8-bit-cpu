@@ -252,6 +252,6 @@ export function nextInstruction(currentState: State): State {
     return nextState;
 }
 
-export function getInitState() {
+export function getInitState(): State {
     return new State();
 }

@@ -24,6 +24,8 @@ export class State {
     private $_bRegister: number = 0;
     private $_aluSubtract: number = 0;
 
+    clock: number = 0;
+
     bus: number = 0;
     halted: number = 0;
     memoryAddress: number = 0;
@@ -85,6 +87,7 @@ export class State {
     copy(): State {
         let copy = new State();
 
+        copy.clock = this.clock;
         copy.bus = this.bus;
         copy.halted = this.halted;
         copy.memoryAddress = this.memoryAddress;
