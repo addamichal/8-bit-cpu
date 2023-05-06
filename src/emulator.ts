@@ -255,10 +255,11 @@ export function nextInstruction(currentState: State): State {
 
     for (let i = 0; i < 5; i++) {
         nextState = handleOpcodes(nextState); // 0 -> 1
+        if (nextState.halted) break;
+        
         nextState = handleOpcodes(nextState); // 1 -> 0
+        if (nextState.halted) break;
     }
-
-    nextState.opcodeCounter = 1;
 
     return nextState;
 }

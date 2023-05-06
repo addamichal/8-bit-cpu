@@ -21,6 +21,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
+        expected.bus = 1;
         expected.counter = 1;
 
         expect(expected).toEqual(actual);
@@ -33,6 +34,7 @@ describe('emulator tests', () => {
         actual = nextInstruction(actual);
 
         let expected = initState.copy();
+        expected.bus = 2;
         expected.counter = 2;
         expected.memoryAddress = 1;
 
@@ -60,7 +62,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 9;
+        expected.bus = 1;
         expected.counter = 1;
         expected.aRegister = 9;
         expected.sumRegister = 9;
@@ -78,7 +80,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 9;
+        expected.bus = 1;
         expected.counter = 1;
         expected.aRegister = 9;
         expected.sumRegister = 9;
@@ -97,7 +99,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 14;
+        expected.bus = 1;
         expected.counter = 1;
         expected.aRegister = 14;
         expected.sumRegister = 14;
@@ -114,10 +116,11 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 0xf0;
+        expected.bus = 0;
         expected.counter = 1;
         expected.halted = 1;
         expected.instructionRegister = 0xf0;
+        expected.opcodeCounter = 2;
 
         expect(expected).toEqual(actual);
     });
@@ -131,7 +134,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 12;
+        expected.bus = 1;
         expected.counter = 1;
         expected.aRegister = 12;
         expected.bRegister = 3;
@@ -152,7 +155,7 @@ describe('emulator tests', () => {
 
         let expected = initState.copy();
         expected.counter = 1;
-        expected.bus = 255;
+        expected.bus = 1;
         expected.aRegister = 255;
         expected.bRegister = 1;
         expected.sumRegister = 0;
@@ -170,6 +173,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
+        expected.bus = 1;
         expected.counter = 1;
         expected.aRegister = 0;
         expected.bRegister = 0;
@@ -190,6 +194,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
+        expected.bus = 1;
         expected.counter = 1;
         expected.aRegister = 0;
         expected.bRegister = 1;
@@ -232,7 +237,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 2;
+        expected.bus = 1;
         expected.counter = 1;
         expected.aRegister = 2;
         expected.bRegister = 3;
@@ -253,7 +258,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 6;
+        expected.bus = 1;
         expected.counter = 1;
         expected.aRegister = 6;
         expected.bRegister = 3;
@@ -276,7 +281,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 254;
+        expected.bus = 1;
         expected.counter = 1;
         expected.aRegister = 254;
         expected.bRegister = 15;
@@ -298,6 +303,7 @@ describe('emulator tests', () => {
 
         let expected = initState.copy();
         expected.counter = 1;
+        expected.bus = 1;
         expected.aRegister = 0;
         expected.bRegister = 0;
         expected.sumRegister = 0;
@@ -319,7 +325,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 255;
+        expected.bus = 1;
         expected.counter = 1;
         expected.aRegister = 255;
         expected.bRegister = 1;
@@ -342,6 +348,7 @@ describe('emulator tests', () => {
 
         let expected = initState.copy();
         expected.counter = 1;
+        expected.bus = 1;
         expected.aRegister = 0;
         expected.bRegister = 8;
         expected.aluSubtract = 1;
@@ -378,7 +385,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 0x77;
+        expected.bus = 1;
         expected.counter = 1;
         expected.instructionRegister = 0x77;
         expected.memoryContent = 0x77;
@@ -409,7 +416,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 0x87;
+        expected.bus = 1;
         expected.counter = 1;
         expected.instructionRegister = 0x87;
         expected.memoryContent = 0x87;
@@ -441,7 +448,7 @@ describe('emulator tests', () => {
         let actual = nextInstruction(initState);
 
         let expected = initState.copy();
-        expected.bus = 7;
+        expected.bus = 1;
         expected.counter = 1;
         expected.outRegister = 7;
         expected.instructionRegister = 0xe0;
