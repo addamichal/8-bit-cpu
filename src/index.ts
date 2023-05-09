@@ -4,7 +4,7 @@ import { ControlWord, State } from "./state";
 
 let paused = 0;
 let state: State = init();
-let speed = 10;
+let speed = 20;
 
 document.querySelector('#startBtn')?.addEventListener('click', start);
 document.querySelector('#pauseBtn')?.addEventListener('click', pause);
@@ -165,8 +165,9 @@ function init(): State {
 
 async function pulseClock() {
     toggleClock();
-    await sleep(speed);
+    await sleep(speed / 2);
     toggleClock();
+    await sleep(speed / 2);
 }
 
 function toggleClock() {

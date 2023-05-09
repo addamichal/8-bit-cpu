@@ -1,3 +1,4 @@
+Flags index and clock, is it inversed?
 CSS Counter next to instruction register
 
 some debugging options - next instruction, stop, run
