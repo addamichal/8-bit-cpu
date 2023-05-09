@@ -1,5 +1,5 @@
 import { getInitState, handleOpcodes } from "./emulator";
-import { AddInstruction, HltInstruction, JcInstruction, JmpInstruction, JzInstruction, LdaInstruction, LdiInstruction, OutInstruction, StaInstruction } from "./instructions";
+import { AddInstruction, HltInstruction, JcInstruction, JmpInstruction, JzInstruction, LdaInstruction, LdiInstruction, OutInstruction, StaInstruction, SubInstruction } from "./instructions";
 import { ControlWord, State } from "./state";
 
 let paused = 0;
@@ -70,6 +70,16 @@ function setOpCodesCounter(value: number) {
     setBinaryValue('op-code-counter', decimalNumber);
 }
 
+function setSumRegister(value: number, c: number, z: number) {
+    let binaryNumber = '';
+    binaryNumber += value.toString(2).padStart(8, '0');
+    binaryNumber += c;
+    binaryNumber += z;
+
+    let decimalNumber = Number.parseInt(binaryNumber, 2);
+    setBinaryValue('sum-register', decimalNumber)
+}
+
 function setControlWord(controlWord: ControlWord) {
     let binaryNumber = '';
     binaryNumber += controlWord.HLT;
@@ -105,7 +115,7 @@ function updateUI(state: State) {
     setBinaryValue('counter', state.counter);
     setFlagsRegister(state.carryFlag, state.zeroFlag);
     setBinaryValue('a-register', state.aRegister);
-    setBinaryValue('sum-register', state.sumRegister);
+    setSumRegister(state.sumRegister, state.sumRegisterOverflow, state.sumRegisterZero);
     setBinaryValue('b-register', state.bRegister);
     setOutputValue(state.outRegister);
     setControlWord(state.controlWord);
@@ -113,6 +123,11 @@ function updateUI(state: State) {
 
 function init(): State {
     let state = getInitState();
+    state.ram[0] = new LdiInstruction(8).toNumber();
+    state.ram[1] = new SubInstruction(15).toNumber();
+    state.ram[15] = 8;
+
+
     // state.ram[0] = new AddInstruction(15).toNumber();
     // state.ram[1] = new JzInstruction(15).toNumber();
     // state.ram[15] = 15;
@@ -128,6 +143,7 @@ function init(): State {
 
     // state.ram[0] = new HltInstruction().toNumber();
 
+    /*
     state.ram[0] = new LdiInstruction(1).toNumber();
     state.ram[1] = new StaInstruction(14).toNumber();
     state.ram[2] = new LdiInstruction(0).toNumber();
@@ -142,6 +158,7 @@ function init(): State {
     state.ram[11] = new JcInstruction(13).toNumber();
     state.ram[12] = new JmpInstruction(3).toNumber();
     state.ram[13] = new HltInstruction().toNumber();
+    */
 
     updateUI(state);
 

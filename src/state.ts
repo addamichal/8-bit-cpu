@@ -67,7 +67,7 @@ export class State {
         this.$_aluSubtract = value;
         this.calculateAlu();
     }
-
+    
     sumRegister: number = 0;
     sumRegisterZero: number = 0;
     sumRegisterOverflow: number = 0;
@@ -112,7 +112,6 @@ export class State {
                     controlWord.BI = 1;
                 }
                 if (this.opcodeCounter === 4) {
-                    controlWord.SU = 0;
                     controlWord.EO = 1;
                     controlWord.FI = 1;
                     controlWord.AI = 1;
@@ -128,7 +127,7 @@ export class State {
                     controlWord.BI = 1;
                 }
                 if (this.opcodeCounter === 4) {
-                    controlWord.SU = 0;
+                    controlWord.SU = 1;
                     controlWord.EO = 1;
                     controlWord.FI = 1;
                     controlWord.AI = 1;
@@ -190,6 +189,15 @@ export class State {
         for (let i = 0; i < 16; i++) {
             this.ram[i] = 0;
         }
+
+        this.counter = 0;
+        this.zeroFlag = 0;
+        this.carryFlag = 0;
+        this.clock = 0;
+        this.bus = 0;
+        this.memoryAddress = 0;
+        this.aRegister = 0;
+        this.bRegister = 0;
     }
 
     copy(): State {

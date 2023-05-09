@@ -1,11 +1,8 @@
-Counter next to instruction register
-BUG - bus is not a register, should be zeroed out every time
-
-BUG - clock raises are not working correctly
-FIX? - clock should be part of state? should take clock into consideration
+CSS Counter next to instruction register
 
 some debugging options - next instruction, stop, run
 
+more tests for clock with in and out, test code words
 rename op-codes counter correctly based on ben eater's naming convention
 add / generate favicon
 optimize for phones
