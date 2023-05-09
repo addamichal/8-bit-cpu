@@ -171,7 +171,6 @@ async function pulseClock() {
 
 function toggleClock() {
     if (state.halted === 1) {
-        console.log('halted!')
         return;
     }
 
