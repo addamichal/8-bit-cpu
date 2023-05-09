@@ -123,9 +123,9 @@ function updateUI(state: State) {
 
 function init(): State {
     let state = getInitState();
-    state.ram[0] = new LdiInstruction(8).toNumber();
-    state.ram[1] = new SubInstruction(15).toNumber();
-    state.ram[15] = 8;
+    // state.ram[0] = new LdiInstruction(8).toNumber();
+    // state.ram[1] = new SubInstruction(15).toNumber();
+    // state.ram[15] = 8;
 
 
     // state.ram[0] = new AddInstruction(15).toNumber();
@@ -143,7 +143,6 @@ function init(): State {
 
     // state.ram[0] = new HltInstruction().toNumber();
 
-    /*
     state.ram[0] = new LdiInstruction(1).toNumber();
     state.ram[1] = new StaInstruction(14).toNumber();
     state.ram[2] = new LdiInstruction(0).toNumber();
@@ -158,7 +157,6 @@ function init(): State {
     state.ram[11] = new JcInstruction(13).toNumber();
     state.ram[12] = new JmpInstruction(3).toNumber();
     state.ram[13] = new HltInstruction().toNumber();
-    */
 
     updateUI(state);
 

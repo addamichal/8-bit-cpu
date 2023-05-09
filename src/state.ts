@@ -25,6 +25,7 @@ export class State {
     private $_aRegister: number = 0;
     private $_bRegister: number = 0;
     private $_aluSubtract: number = 0;
+    private $_opcodeCounter: number = 0;
 
     clock: number = 0;
 
@@ -40,7 +41,16 @@ export class State {
     ram: number[] = [];
     instructionRegister = 0;
 
-    opcodeCounter: number = 0;
+    get opcodeCounter(): number {
+        return this.$_opcodeCounter;
+    }
+
+    set opcodeCounter(value: number) {
+        this.$_opcodeCounter = value;
+        if (this.$_opcodeCounter === 5) {
+            this.$_opcodeCounter = 0;
+        }
+    }
 
     counter: number = 0;
 
@@ -67,7 +77,7 @@ export class State {
         this.$_aluSubtract = value;
         this.calculateAlu();
     }
-    
+
     sumRegister: number = 0;
     sumRegisterZero: number = 0;
     sumRegisterOverflow: number = 0;

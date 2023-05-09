@@ -101,11 +101,8 @@ export function handleOpcode(opcode: OpCode, newState: State) {
 export function handleOpcodes(currentState: State): State {
     let newState: State = currentState.copy();
 
-    if (newState.clock === 1) { // move this code to state?
+    if (newState.clock === 1) {
         newState.opcodeCounter++;
-        if (newState.opcodeCounter === 5) {
-            newState.opcodeCounter = 0;
-        }
     }
 
     newState.clock = newState.clock === 1 ? 0 : 1;
