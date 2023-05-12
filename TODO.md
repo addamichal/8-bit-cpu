@@ -1,9 +1,9 @@
-Flags index and clock, is it inversed?
+TESTS state test
+TESTS op code words
 CSS Counter next to instruction register
 
 some debugging options - next instruction, stop, run
 
-more tests for clock with in and out, test code words
 rename op-codes counter correctly based on ben eater's naming convention
 add / generate favicon
 optimize for phones

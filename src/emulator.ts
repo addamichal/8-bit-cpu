@@ -109,11 +109,11 @@ export function handleOpcodes(currentState: State): State {
     newState.bus = 0;
 
     handleOpcode(OpCode.HLT, newState);
+    handleOpcode(OpCode.SU, newState);
     handleOpcode(OpCode.RO, newState);
     handleOpcode(OpCode.IO, newState);
     handleOpcode(OpCode.AO, newState);
     handleOpcode(OpCode.EO, newState);
-    handleOpcode(OpCode.SU, newState);
     handleOpcode(OpCode.CO, newState);
     handleOpcode(OpCode.FI, newState);
     handleOpcode(OpCode.MI, newState);

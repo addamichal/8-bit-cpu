@@ -879,3 +879,308 @@ describe('ldi instruction', () => {
         expect(expected).toEqual(actual);
     });
 });
+
+describe('add instruction', () => {
+    let initState = getInitState();
+    initState.aRegister = 5;
+    initState.ram[0] = new AddInstruction(15).toNumber();
+    initState.ram[15] = 15;
+
+    test('t0 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 1);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.sumRegister = 5;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t0 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 2);
+
+        let expected = initState.copy();
+        expected.bus = 47;
+        expected.opcodeCounter = 1;
+        expected.clock = 0;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 3);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.bus = 47;
+        expected.opcodeCounter = 1;
+        expected.counter = 1;
+        expected.instructionRegister = 47;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 4);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = 15;
+        expected.opcodeCounter = 2;
+        expected.counter = 1;
+        expected.instructionRegister = 47;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 5);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.bus = 15;
+        expected.opcodeCounter = 2;
+        expected.counter = 1;
+        expected.instructionRegister = 47;
+        expected.memoryAddress = 15;
+        expected.aRegister = 5;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 6);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = 15;
+        expected.opcodeCounter = 3;
+        expected.counter = 1;
+        expected.instructionRegister = 47;
+        expected.memoryAddress = 15;
+        expected.aRegister = 5;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 7);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.bus = 15;
+        expected.opcodeCounter = 3;
+        expected.counter = 1;
+        expected.instructionRegister = 47;
+        expected.memoryAddress = 15;
+        expected.aRegister = 5;
+        expected.bRegister = 15;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 8);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = 20;
+        expected.opcodeCounter = 4;
+        expected.counter = 1;
+        expected.instructionRegister = 47;
+        expected.memoryAddress = 15;
+        expected.aRegister = 5;
+        expected.bRegister = 15;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 9);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.bus = 20;
+        expected.opcodeCounter = 4;
+        expected.counter = 1;
+        expected.instructionRegister = 47;
+        expected.memoryAddress = 15;
+        expected.aRegister = 20;
+        expected.bRegister = 15;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 10);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = 1;
+        expected.opcodeCounter = 0;
+        expected.counter = 1;
+        expected.instructionRegister = 47;
+        expected.memoryAddress = 15;
+        expected.aRegister = 20;
+        expected.bRegister = 15;
+
+        expect(expected).toEqual(actual);
+    });
+});
+
+describe('sub instruction', () => {
+    let initState = getInitState();
+    initState.ram[0] = new LdiInstruction(15).toNumber();
+    initState.ram[1] = new SubInstruction(15).toNumber();
+    initState.ram[15] = 5;
+    initState = nextInstruction(initState);
+
+    test('t0 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 1);
+
+        let expected = initState.copy();
+        expected.bus = 1;
+        expected.clock = 1;
+        expected.memoryAddress = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t0 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 2);
+
+        let expected = initState.copy();
+        expected.bus = 63;
+        expected.opcodeCounter = 1;
+        expected.clock = 0;
+        expected.memoryAddress = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 3);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.bus = 63;
+        expected.opcodeCounter = 1;
+        expected.counter = 2;
+        expected.instructionRegister = 63;
+        expected.memoryAddress = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 4);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = 15;
+        expected.opcodeCounter = 2;
+        expected.counter = 2;
+        expected.instructionRegister = 63;
+        expected.memoryAddress = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 5);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.bus = 15;
+        expected.opcodeCounter = 2;
+        expected.counter = 2;
+        expected.instructionRegister = 63;
+        expected.memoryAddress = 15;
+        expected.aRegister = 15;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 6);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = 5;
+        expected.opcodeCounter = 3;
+        expected.counter = 2;
+        expected.instructionRegister = 63;
+        expected.memoryAddress = 15;
+        expected.aRegister = 15;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 7);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.bus = 5;
+        expected.opcodeCounter = 3;
+        expected.counter = 2;
+        expected.instructionRegister = 63;
+        expected.memoryAddress = 15;
+        expected.aRegister = 15;
+        expected.bRegister = 5;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 8);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = 10; // ????
+        expected.opcodeCounter = 4;
+        expected.counter = 2;
+        expected.instructionRegister = 63;
+        expected.memoryAddress = 15;
+        expected.aRegister = 15;
+        expected.bRegister = 5;
+        expected.aluSubtract = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 9);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.bus = 10;
+        expected.opcodeCounter = 4;
+        expected.counter = 2;
+        expected.instructionRegister = 63;
+        expected.memoryAddress = 15;
+        expected.aRegister = 10;
+        expected.bRegister = 5;
+        expected.aluSubtract = 1;
+        expected.carryFlag = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 10);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = 2;
+        expected.opcodeCounter = 0;
+        expected.counter = 2;
+        expected.instructionRegister = 63;
+        expected.memoryAddress = 15;
+        expected.aRegister = 10;
+        expected.bRegister = 5;
+        expected.carryFlag = 1;
+
+        expect(expected).toEqual(actual);
+    });
+});
