@@ -4,7 +4,7 @@ import { ControlWord, State } from "./state";
 
 let paused = 0;
 let state: State = init();
-let speed = 20;
+let speed = 10;
 
 document.querySelector('#startBtn')?.addEventListener('click', start);
 document.querySelector('#pauseBtn')?.addEventListener('click', pause);

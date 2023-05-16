@@ -1,4 +1,6 @@
-TESTS state test
+control speed
+improve UI controls
+
 TESTS op code words
 CSS Counter next to instruction register
 

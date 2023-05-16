@@ -1738,3 +1738,549 @@ describe('jmp instruction', () => {
         expect(expected).toEqual(actual);
     });
 });
+
+describe('jz instruction', () => {
+    let initState = getInitState();
+    initState.ram[0] = new JzInstruction(15).toNumber();
+
+    test('t0 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 1);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t0 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 2);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = new JzInstruction(15).toNumber();
+        expected.opcodeCounter = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 3);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 1;
+        expected.opcodeCounter = 1;
+        expected.bus = new JzInstruction(15).toNumber();
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 4);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 1;
+        expected.opcodeCounter = 2;
+        expected.bus = 0;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 5);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 1;
+        expected.opcodeCounter = 2;
+        expected.bus = 0;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 6);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 1;
+        expected.opcodeCounter = 3;
+        expected.bus = 0;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 7);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 1;
+        expected.opcodeCounter = 3;
+        expected.bus = 0;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 8);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 1;
+        expected.opcodeCounter = 4;
+        expected.bus = 0;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 9);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 1;
+        expected.opcodeCounter = 4;
+        expected.bus = 0;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 10);
+
+        let expected = initState.copy();
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+        expected.counter = 1;
+        expected.bus = 1;
+        expected.opcodeCounter = 0;
+        expected.clock = 0;
+
+        expect(expected).toEqual(actual);
+    });
+});
+
+describe('jz instruction zero flag', () => {
+    let initState = getInitState();
+    initState.ram[0] = new LdiInstruction(1).toNumber();
+    initState.ram[1] = new SubInstruction(15).toNumber();
+    initState.ram[2] = new JzInstruction(15).toNumber();
+    initState.ram[15] = 1;
+    initState = nextInstruction(initState);
+    initState = nextInstruction(initState);
+
+    test('t0 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 1);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.memoryAddress = 2;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t0 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 2);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = new JzInstruction(15).toNumber();
+        expected.opcodeCounter = 1;
+        expected.memoryAddress = 2;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 3);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 3;
+        expected.memoryAddress = 2;
+        expected.opcodeCounter = 1;
+        expected.bus = new JzInstruction(15).toNumber();
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 4);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 3;
+        expected.memoryAddress = 2;
+        expected.opcodeCounter = 2;
+        expected.bus = 15;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 5);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 15;
+        expected.opcodeCounter = 2;
+        expected.bus = 15;
+        expected.memoryAddress = 2;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 6);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 15;
+        expected.opcodeCounter = 3;
+        expected.bus = 0;
+        expected.memoryAddress = 2;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 7);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 15;
+        expected.opcodeCounter = 3;
+        expected.bus = 0;
+        expected.memoryAddress = 2;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 8);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 15;
+        expected.opcodeCounter = 4;
+        expected.bus = 0;
+        expected.memoryAddress = 2;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 9);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 15;
+        expected.opcodeCounter = 4;
+        expected.bus = 0;
+        expected.memoryAddress = 2;
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 10);
+
+        let expected = initState.copy();
+        expected.instructionRegister = new JzInstruction(15).toNumber();
+        expected.counter = 15;
+        expected.bus = 15;
+        expected.opcodeCounter = 0;
+        expected.clock = 0;
+        expected.memoryAddress = 2;
+
+        expect(expected).toEqual(actual);
+    });
+});
+
+describe('jc instruction', () => {
+    let initState = getInitState();
+    initState.ram[0] = new JcInstruction(15).toNumber();
+
+    test('t0 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 1);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t0 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 2);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = new JcInstruction(15).toNumber();
+        expected.opcodeCounter = 1;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 3);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 1;
+        expected.opcodeCounter = 1;
+        expected.bus = new JcInstruction(15).toNumber();
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 4);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 1;
+        expected.opcodeCounter = 2;
+        expected.bus = 0;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 5);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 1;
+        expected.opcodeCounter = 2;
+        expected.bus = 0;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 6);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 1;
+        expected.opcodeCounter = 3;
+        expected.bus = 0;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 7);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 1;
+        expected.opcodeCounter = 3;
+        expected.bus = 0;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 8);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 1;
+        expected.opcodeCounter = 4;
+        expected.bus = 0;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 9);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 1;
+        expected.opcodeCounter = 4;
+        expected.bus = 0;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 10);
+
+        let expected = initState.copy();
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+        expected.counter = 1;
+        expected.bus = 1;
+        expected.opcodeCounter = 0;
+        expected.clock = 0;
+
+        expect(expected).toEqual(actual);
+    });
+});
+
+describe('jc instruction zero flag', () => {
+    let initState = getInitState();
+    initState.ram[0] = new LdiInstruction(1).toNumber();
+    initState.ram[1] = new SubInstruction(15).toNumber();
+    initState.ram[2] = new JcInstruction(15).toNumber();
+    initState.ram[15] = 1;
+    initState = nextInstruction(initState);
+    initState = nextInstruction(initState);
+
+    test('t0 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 1);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.memoryAddress = 2;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t0 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 2);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.bus = new JcInstruction(15).toNumber();
+        expected.opcodeCounter = 1;
+        expected.memoryAddress = 2;
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 3);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 3;
+        expected.memoryAddress = 2;
+        expected.opcodeCounter = 1;
+        expected.bus = new JcInstruction(15).toNumber();
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t1 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 4);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 3;
+        expected.memoryAddress = 2;
+        expected.opcodeCounter = 2;
+        expected.bus = 15;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 5);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 15;
+        expected.opcodeCounter = 2;
+        expected.bus = 15;
+        expected.memoryAddress = 2;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t2 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 6);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 15;
+        expected.opcodeCounter = 3;
+        expected.bus = 0;
+        expected.memoryAddress = 2;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 7);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 15;
+        expected.opcodeCounter = 3;
+        expected.bus = 0;
+        expected.memoryAddress = 2;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t3 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 8);
+
+        let expected = initState.copy();
+        expected.clock = 0;
+        expected.counter = 15;
+        expected.opcodeCounter = 4;
+        expected.bus = 0;
+        expected.memoryAddress = 2;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 0', () => {
+        let actual = repeatHandleOpCodes(initState, 9);
+
+        let expected = initState.copy();
+        expected.clock = 1;
+        expected.counter = 15;
+        expected.opcodeCounter = 4;
+        expected.bus = 0;
+        expected.memoryAddress = 2;
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+
+        expect(expected).toEqual(actual);
+    });
+
+    test('t4 clock 1', () => {
+        let actual = repeatHandleOpCodes(initState, 10);
+
+        let expected = initState.copy();
+        expected.instructionRegister = new JcInstruction(15).toNumber();
+        expected.counter = 15;
+        expected.bus = 15;
+        expected.opcodeCounter = 0;
+        expected.clock = 0;
+        expected.memoryAddress = 2;
+
+        expect(expected).toEqual(actual);
+    });
+});
