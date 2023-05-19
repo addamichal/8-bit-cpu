@@ -218,3 +218,29 @@ body {
 .sum-register {
     display: flex;
 }
+
+.flex {
+    display: flex;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.grid {
+    display: grid;
+    grid-auto-flow: column;
+}
+
+.clock-button {
+    margin-left: 10px;
+}
+
+.slider {
+    width: 50px;
+    margin-left: 10px;
+}
+
+.bootstrapper-textarea {
+    width: 100%;
+}

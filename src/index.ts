@@ -2,14 +2,14 @@ import { getInitState, handleOpcodes } from "./emulator";
 import { AddInstruction, HltInstruction, JcInstruction, JmpInstruction, JzInstruction, LdaInstruction, LdiInstruction, OutInstruction, StaInstruction, SubInstruction } from "./instructions";
 import { ControlWord, State } from "./state";
 
-let paused = 0;
+let paused = 1;
 let state: State = init();
-let speed = 10;
+let speed = 1000;
 
-document.querySelector('#startBtn')?.addEventListener('click', start);
-document.querySelector('#pauseBtn')?.addEventListener('click', pause);
-document.querySelector('#pulseClockBtn')?.addEventListener('click', pulseClock);
-document.querySelector('#toggleClockBtn')?.addEventListener('click', toggleClock);
+document.querySelector('#speed')?.addEventListener('change', speedChanged)
+document.querySelector('#toggleBtn')?.addEventListener('click', toggle);
+document.querySelector('#pulseBtn')?.addEventListener('mousedown', toggleClock);
+document.querySelector('#pulseBtn')?.addEventListener('mouseup', toggleClock);
 document.querySelector('#resetBtn')?.addEventListener('click', () => {
     state = init();
 });
@@ -163,11 +163,28 @@ function init(): State {
     return state;
 }
 
-async function pulseClock() {
-    toggleClock();
-    await sleep(speed / 2);
-    toggleClock();
-    await sleep(speed / 2);
+function speedChanged(e: Event) {
+    let htmlElement: HTMLInputElement = e.target as HTMLInputElement;
+    let value = htmlElement.value;
+    switch (value) {
+        case "1":
+            speed = 3000;
+            break;
+        case "2":
+            speed = 1000;
+            break;
+        case "3":
+            speed = 500;
+            break;
+        case "4":
+            speed = 100;
+            break;
+        case "5":
+            speed = 10;
+            break;
+        default:
+            throw new Error(`unsupported value: ${speed}`);
+    }
 }
 
 function toggleClock() {
@@ -183,7 +200,21 @@ function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function start() {
+async function toggle() {
+    let startBtn = document.querySelector('#toggleBtn');
+    let pulseBtn = document.querySelector('#pulseBtn');
+    if (!startBtn) throw new Error('startBtn not available');
+    if (!pulseBtn) throw new Error('pulseBtn not available');
+
+    if (paused === 0) {
+        startBtn.textContent = 'OSC'
+        pulseBtn.removeAttribute('disabled');
+        paused = 1;
+        return;
+    }
+
+    pulseBtn.setAttribute('disabled', 'disabled');
+    startBtn.textContent = 'MAN'
     paused = 0;
 
     while (state.halted !== 1 && paused !== 1) {
@@ -191,6 +222,9 @@ async function start() {
     }
 }
 
-function pause() {
-    paused = 1;
+async function pulseClock() {
+    toggleClock();
+    await sleep(speed / 2);
+    toggleClock();
+    await sleep(speed / 2);
 }

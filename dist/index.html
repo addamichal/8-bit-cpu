@@ -13,19 +13,19 @@
 </head>
 
 <body>
-    <div class="controls">
-        <button id="resetBtn" type="button">Reset</button>
-        <button id="startBtn" type="button">Start</button>
-        <button id="pauseBtn" type="button">Pause</button>
-        <button id="pulseClockBtn" type="button">Pulse Clock</button>
-        <button id="toggleClockBtn" type="button">Toggle Clock</button>
-    </div>
     <div class="container">
         <div class="column">
             <div id="clock" class="module">
                 <span class="title">Clock</span>
-                <div class="leds">
-                    <span class="blue led"></span>
+                <div class="flex">
+                    <div class="leds">
+                        <span class="blue led"></span>
+                    </div>
+                    <button title="pulse clock" id="pulseBtn" class="clock-button">PLS</button>
+                    <input title="clock speed" type="range" min="1" max="5" value="1" class="slider" id="speed">
+                    <button title="toggle between manual mode and oscilator mode" id="toggleBtn"
+                        class="clock-button">OSC</button>
+                    <button title="reset" id="resetBtn" class="clock-button">RST</button>
                 </div>
             </div>
             <div id="memory-address" class="module">
@@ -66,50 +66,63 @@
                     <span class="sticker3">1</span>
                 </div>
             </div>
-            <div id="instruction-register" class="module">
-                <span class="title">Instruction Register</span>
-                <div class="leds">
-                    <span class="blue led"></span>
-                    <span class="blue led"></span>
-                    <span class="blue led"></span>
-                    <span class="blue led"></span>
-                    <span class="yellow led"></span>
-                    <span class="yellow led"></span>
-                    <span class="yellow led"></span>
-                    <span class="yellow led"></span>
+            <div class="grid">
+                <div id="op-code-counter" class="module mr-10">
+                    <span class="title">OP Codes Counter</span>
+                    <div class="leds">
+                        <span class="red led"></span>
+                        <span class="red led"></span>
+                        <span class="red led"></span>
+                        <span class="green led"></span>
+                        <span class="green led"></span>
+                        <span class="green led"></span>
+                        <span class="green led"></span>
+                        <span class="green led"></span>
+                    </div>
+                    <div class="stickers">
+                        <span class="sticker3">1</span>
+                        <span class="sticker3">2</span>
+                        <span class="sticker3">4</span>
+                        <span class="sticker2">T0</span>
+                        <span class="sticker2">T1</span>
+                        <span class="sticker2">T2</span>
+                        <span class="sticker2">T3</span>
+                        <span class="sticker2">T4</span>
+                    </div>
                 </div>
-                <div class="stickers">
-                    <span class="sticker3">8</span>
-                    <span class="sticker3">4</span>
-                    <span class="sticker3">2</span>
-                    <span class="sticker3">1</span>
-                    <span class="sticker3">8</span>
-                    <span class="sticker3">4</span>
-                    <span class="sticker3">2</span>
-                    <span class="sticker3">1</span>
+                <div id="instruction-register" class="module">
+                    <span class="title">Instruction Register</span>
+                    <div class="leds">
+                        <span class="blue led"></span>
+                        <span class="blue led"></span>
+                        <span class="blue led"></span>
+                        <span class="blue led"></span>
+                        <span class="yellow led"></span>
+                        <span class="yellow led"></span>
+                        <span class="yellow led"></span>
+                        <span class="yellow led"></span>
+                    </div>
+                    <div class="stickers">
+                        <span class="sticker3">8</span>
+                        <span class="sticker3">4</span>
+                        <span class="sticker3">2</span>
+                        <span class="sticker3">1</span>
+                        <span class="sticker3">8</span>
+                        <span class="sticker3">4</span>
+                        <span class="sticker3">2</span>
+                        <span class="sticker3">1</span>
+                    </div>
                 </div>
             </div>
-            <div id="op-code-counter" class="module">
-                <span class="title">OP Codes Counter</span>
-                <div class="leds">
-                    <span class="red led"></span>
-                    <span class="red led"></span>
-                    <span class="red led"></span>
-                    <span class="green led"></span>
-                    <span class="green led"></span>
-                    <span class="green led"></span>
-                    <span class="green led"></span>
-                    <span class="green led"></span>
-                </div>
-                <div class="stickers">
-                    <span class="sticker3">1</span>
-                    <span class="sticker3">2</span>
-                    <span class="sticker3">4</span>
-                    <span class="sticker2">T0</span>
-                    <span class="sticker2">T1</span>
-                    <span class="sticker2">T2</span>
-                    <span class="sticker2">T3</span>
-                    <span class="sticker2">T4</span>
+            <div id="bootstrapper" class="module">
+                <span class="title">Bootstrapper</span>
+                <select>
+                    <option>Fibonacci</option>
+                    <option>Count to 10</option>
+                    <option>Blank</option>
+                </select>
+                <div>
+                    <textarea class="bootstrapper-textarea" rows="16"></textarea>
                 </div>
             </div>
         </div>
@@ -154,38 +167,40 @@
                     <span class="sticker3">1</span>
                 </div>
             </div>
-            <div id="flags-register" class="module">
-                <span class="title">Flags Register</span>
-                <div class="leds">
-                    <span class="green led"></span>
-                    <span class="green led"></span>
+            <div class="grid">
+                <div id="a-register" class="module mr-10">
+                    <span class="title">A Register</span>
+                    <div class="leds">
+                        <span class="red led"></span>
+                        <span class="red led"></span>
+                        <span class="red led"></span>
+                        <span class="red led"></span>
+                        <span class="red led"></span>
+                        <span class="red led"></span>
+                        <span class="red led"></span>
+                        <span class="red led"></span>
+                    </div>
+                    <div class="stickers">
+                        <span class="sticker3">128</span>
+                        <span class="sticker3">64</span>
+                        <span class="sticker3">32</span>
+                        <span class="sticker3">16</span>
+                        <span class="sticker3">8</span>
+                        <span class="sticker3">4</span>
+                        <span class="sticker3">2</span>
+                        <span class="sticker3">1</span>
+                    </div>
                 </div>
-                <div class="stickers">
-                    <span class="sticker">CF</span>
-                    <span class="sticker">ZF</span>
-                </div>
-            </div>
-            <div id="a-register" class="module">
-                <span class="title">A Register</span>
-                <div class="leds">
-                    <span class="red led"></span>
-                    <span class="red led"></span>
-                    <span class="red led"></span>
-                    <span class="red led"></span>
-                    <span class="red led"></span>
-                    <span class="red led"></span>
-                    <span class="red led"></span>
-                    <span class="red led"></span>
-                </div>
-                <div class="stickers">
-                    <span class="sticker3">128</span>
-                    <span class="sticker3">64</span>
-                    <span class="sticker3">32</span>
-                    <span class="sticker3">16</span>
-                    <span class="sticker3">8</span>
-                    <span class="sticker3">4</span>
-                    <span class="sticker3">2</span>
-                    <span class="sticker3">1</span>
+                <div id="flags-register" class="module">
+                    <span class="title">Flags Register</span>
+                    <div class="leds">
+                        <span class="green led"></span>
+                        <span class="green led"></span>
+                    </div>
+                    <div class="stickers">
+                        <span class="sticker">CF</span>
+                        <span class="sticker">ZF</span>
+                    </div>
                 </div>
             </div>
             <div id="sum-register" class="module">

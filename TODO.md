@@ -1,9 +1,8 @@
-control speed
-improve UI controls
+bootstrapper
+load different programs
 
 TESTS op code words
-CSS Counter next to instruction register
-
+Toggle output register btn
 some debugging options - next instruction, stop, run
 
 rename op-codes counter correctly based on ben eater's naming convention
