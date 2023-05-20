@@ -28,7 +28,7 @@ function parseInstruction(line: string): Instruction {
 
     if (Number.isNaN(value)) throw new Error('Instruction value must be a number');
     if (value < 0) throw new Error('Instruction value cannot be a negative number');
-    if (value > 16) throw new Error('Instruction value cannot be bigger than 127');
+    if (value > 15) throw new Error('Instruction value cannot be bigger than 127');
 
     switch (instruction) {
         case 'LDA':

@@ -168,7 +168,7 @@ function speedChanged(e: Event) {
 function programChanged(e: Event) {
     let programSelect = document.querySelector('#program') as HTMLSelectElement;
     setProgram(programSelect.value);
-    state = init();
+    reset();
 }
 
 function setProgram(name: string) {
