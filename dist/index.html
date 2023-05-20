@@ -22,7 +22,7 @@
                         <span class="blue led"></span>
                     </div>
                     <button title="pulse clock" id="pulseBtn" class="clock-button">PLS</button>
-                    <input title="clock speed" type="range" min="1" max="5" value="1" class="slider" id="speed">
+                    <input title="clock speed" type="range" min="1" max="5" value="5" class="slider" id="speed">
                     <button title="toggle between manual mode and oscilator mode" id="toggleBtn"
                         class="clock-button">OSC</button>
                     <button title="reset" id="resetBtn" class="clock-button">RST</button>
@@ -116,13 +116,15 @@
             </div>
             <div id="bootstrapper" class="module">
                 <span class="title">Bootstrapper</span>
-                <select>
+                <select id="program">
                     <option>Fibonacci</option>
-                    <option>Count to 10</option>
+                    <option>Multiplication</option>
+                    <option>Print numbers 0 to 10</option>
+                    <option>Print numbers 0 to 255</option>
                     <option>Blank</option>
                 </select>
                 <div>
-                    <textarea class="bootstrapper-textarea" rows="16"></textarea>
+                    <textarea id="code" class="bootstrapper-textarea" rows="16"></textarea>
                 </div>
             </div>
         </div>

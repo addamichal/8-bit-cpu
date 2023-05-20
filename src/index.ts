@@ -1,18 +1,21 @@
+import { assemble } from "./assembler";
 import { getInitState, handleOpcodes } from "./emulator";
-import { AddInstruction, HltInstruction, JcInstruction, JmpInstruction, JzInstruction, LdaInstruction, LdiInstruction, OutInstruction, StaInstruction, SubInstruction } from "./instructions";
+import { getProgram } from "./program";
 import { ControlWord, State } from "./state";
 
-let paused = 1;
+let running = 0;
+let manualMode = 1;
+setProgram('Fibonacci');
 let state: State = init();
-let speed = 1000;
+let speed = 1;
 
 document.querySelector('#speed')?.addEventListener('change', speedChanged)
 document.querySelector('#toggleBtn')?.addEventListener('click', toggle);
 document.querySelector('#pulseBtn')?.addEventListener('mousedown', toggleClock);
 document.querySelector('#pulseBtn')?.addEventListener('mouseup', toggleClock);
-document.querySelector('#resetBtn')?.addEventListener('click', () => {
-    state = init();
-});
+document.querySelector('#resetBtn')?.addEventListener('click', reset);
+document.querySelector('#program')?.addEventListener('change', programChanged);
+document.querySelector('#code')?.addEventListener('input', reset);
 
 function setBinaryValue(module: string, number: number) {
     let moduleDiv = document.querySelector(`#${module}`) as HTMLDivElement;
@@ -122,41 +125,16 @@ function updateUI(state: State) {
 }
 
 function init(): State {
+    let textArea = document.querySelector('#code') as HTMLTextAreaElement;
+    let code = textArea.value?.split('\n') ?? [];
+    let program = assemble(code);
+
     let state = getInitState();
-    // state.ram[0] = new LdiInstruction(8).toNumber();
-    // state.ram[1] = new SubInstruction(15).toNumber();
-    // state.ram[15] = 8;
-
-
-    // state.ram[0] = new AddInstruction(15).toNumber();
-    // state.ram[1] = new JzInstruction(15).toNumber();
-    // state.ram[15] = 15;
-
-    // state.ram[0] = new HltInstruction().toNumber();
-
-    // state.ram[0] = new LdiInstruction(15).toNumber();
-    // state.ram[1] = new OutInstruction().toNumber();
-    // state.ram[2] = new HltInstruction().toNumber();
-
-    // state.ram[0] = new AddInstruction(15).toNumber();
-    // state.ram[1] = new HltInstruction().toNumber();
-
-    // state.ram[0] = new HltInstruction().toNumber();
-
-    state.ram[0] = new LdiInstruction(1).toNumber();
-    state.ram[1] = new StaInstruction(14).toNumber();
-    state.ram[2] = new LdiInstruction(0).toNumber();
-    state.ram[3] = new StaInstruction(15).toNumber();
-    state.ram[4] = new OutInstruction().toNumber();
-    state.ram[5] = new LdaInstruction(14).toNumber();
-    state.ram[6] = new AddInstruction(15).toNumber();
-    state.ram[7] = new StaInstruction(14).toNumber();
-    state.ram[8] = new OutInstruction().toNumber();
-    state.ram[9] = new LdaInstruction(15).toNumber();
-    state.ram[10] = new AddInstruction(14).toNumber();
-    state.ram[11] = new JcInstruction(13).toNumber();
-    state.ram[12] = new JmpInstruction(3).toNumber();
-    state.ram[13] = new HltInstruction().toNumber();
+    for (let i = 0; i < state.ram.length; i++) {
+        if (program.length > i) {
+            state.ram[i] = program[i];
+        }
+    }
 
     updateUI(state);
 
@@ -168,23 +146,45 @@ function speedChanged(e: Event) {
     let value = htmlElement.value;
     switch (value) {
         case "1":
-            speed = 3000;
-            break;
-        case "2":
             speed = 1000;
             break;
-        case "3":
+        case "2":
             speed = 500;
             break;
-        case "4":
+        case "3":
             speed = 100;
             break;
-        case "5":
+        case "4":
             speed = 10;
+            break;
+        case "5":
+            speed = 1;
             break;
         default:
             throw new Error(`unsupported value: ${speed}`);
     }
+}
+
+function programChanged(e: Event) {
+    let programSelect = document.querySelector('#program') as HTMLSelectElement;
+    setProgram(programSelect.value);
+    state = init();
+}
+
+function setProgram(name: string) {
+    let code = getProgram(name.toLowerCase());
+    setBootloader(code);
+}
+
+function setBootloader(code: string[]) {
+    let textArea = document.querySelector('#code') as HTMLTextAreaElement;
+    if (!textArea) throw new Error('textarea not found');
+    textArea.value = code.join('\n');
+}
+
+function reset() {
+    state = init();
+    run();
 }
 
 function toggleClock() {
@@ -206,20 +206,37 @@ async function toggle() {
     if (!startBtn) throw new Error('startBtn not available');
     if (!pulseBtn) throw new Error('pulseBtn not available');
 
-    if (paused === 0) {
+    if (manualMode === 0) {
         startBtn.textContent = 'OSC'
         pulseBtn.removeAttribute('disabled');
-        paused = 1;
+        manualMode = 1;
         return;
     }
 
     pulseBtn.setAttribute('disabled', 'disabled');
     startBtn.textContent = 'MAN'
-    paused = 0;
+    manualMode = 0;
 
-    while (state.halted !== 1 && paused !== 1) {
+    run();
+}
+
+async function run() {
+    if (manualMode) {
+        console.log('manual mode, will not run');
+        return;
+    }
+    if (running) {
+        console.log('already running, will not run again');
+        return;
+    }
+
+    running = 1;
+
+    while (state.halted !== 1 && manualMode !== 1) {
         await pulseClock();
     }
+
+    running = 0;
 }
 
 async function pulseClock() {
