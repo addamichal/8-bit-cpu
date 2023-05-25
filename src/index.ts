@@ -83,6 +83,14 @@ function setSumRegister(value: number, c: number, z: number) {
     setBinaryValue('sum-register', decimalNumber)
 }
 
+function setRam(ram: number[]) {
+    let ramValues = document.querySelectorAll('.ram-value');
+    for (let i = 0; i < ram.length; i++) {
+        let binaryNumber = ram[i].toString(2).padStart(8, '0');
+        ramValues[i].textContent = binaryNumber.substring(0, 4) + ' ' + binaryNumber.substring(4);
+    }
+}
+
 function setControlWord(controlWord: ControlWord) {
     let binaryNumber = '';
     binaryNumber += controlWord.HLT;
@@ -122,6 +130,7 @@ function updateUI(state: State) {
     setBinaryValue('b-register', state.bRegister);
     setOutputValue(state.outRegister);
     setControlWord(state.controlWord);
+    setRam(state.ram);
 }
 
 function init(): State {

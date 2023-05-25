@@ -241,6 +241,21 @@ body {
     margin-left: 10px;
 }
 
+.line-counter-textarea {
+    resize: none;
+    border: none;
+}
+
 .bootstrapper-textarea {
     width: 100%;
+    resize: none;
+}
+
+.ram div {
+    line-height: 1em;
+    margin-bottom: 2.5px;
+}
+
+#program {
+    margin-top: 10px;
 }
