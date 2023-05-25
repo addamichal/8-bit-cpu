@@ -20,3 +20,6 @@ jobs:
         with:
           name: static-site
           path: dist/
+      - name: Deploy to GitHub Pages
+        id: static-site
+        uses: actions/deploy-pages@v2
