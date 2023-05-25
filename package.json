@@ -4,6 +4,7 @@
   "description": "",
   "main": "emulator.js",
   "scripts": {
+    "build": "webpack",
     "start": "webpack serve --open",
     "test": "jest"
   },
