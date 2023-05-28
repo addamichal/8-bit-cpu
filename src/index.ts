@@ -1,5 +1,6 @@
 import { assemble } from "./assembler";
 import { getInitState, handleOpcodes } from "./emulator";
+import { InstructionCode } from "./instructions";
 import { getProgram } from "./program";
 import { ControlWord, State } from "./state";
 
@@ -34,6 +35,34 @@ function setBinaryValue(module: string, number: number) {
             leds[i].classList.add('active');
         }
     }
+}
+
+function setNumericValue(module: string, number: number) {
+    let moduleDiv = document.querySelector(`#${module}`) as HTMLDivElement;
+    if (!moduleDiv) throw new Error(`Module ${module} not found`);
+
+    let titleSpan = moduleDiv.querySelector('.title');
+    if (!titleSpan) throw new Error(`Title for Module: ${module} not found`);
+
+    let title = titleSpan.textContent?.split('[')[0];
+    let newTitle = title + ' [' + number + ']';
+    titleSpan.textContent = newTitle;
+}
+
+function setInstructionRegisterValue(number: number) {
+    let moduleDiv = document.querySelector(`#instruction-register`) as HTMLDivElement;
+    if (!moduleDiv) throw new Error(`Module instruction register not found`);
+
+    let titleSpan = moduleDiv.querySelector('.title');
+    if (!titleSpan) throw new Error(`Title for Module: ${module} not found`);
+
+    let title = titleSpan.textContent?.split('[')[0];
+
+    let instruction = number >> 4;
+    let value = number & 15;
+    let instructionText: string = InstructionCode[instruction];
+    let newTitle = title + '[' + instructionText + ' ' + value + ']';
+    titleSpan.textContent = newTitle;
 }
 
 function setOutputValue(number: number) {
@@ -117,17 +146,26 @@ function setControlWord(controlWord: ControlWord) {
 function updateUI(state: State) {
     setBinaryValue('clock', state.clock);
     setBinaryValue('memory-address', state.memoryAddress);
+    setNumericValue('memory-address', state.memoryAddress);
     setBinaryValue('memory-content', state.memoryContent);
+    setNumericValue('memory-content', state.memoryContent);
+
     setBinaryValue('instruction-register', state.instructionRegister);
+    setInstructionRegisterValue(state.instructionRegister);
     setOpCodesCounter(state.opcodeCounter);
 
     setBinaryValue('bus', state.bus);
+    setNumericValue('bus', state.bus);
 
     setBinaryValue('counter', state.counter);
+    setNumericValue('counter', state.counter);
     setFlagsRegister(state.carryFlag, state.zeroFlag);
     setBinaryValue('a-register', state.aRegister);
+    setNumericValue('a-register', state.aRegister);
     setSumRegister(state.sumRegister, state.sumRegisterOverflow, state.sumRegisterZero);
+    setNumericValue('sum-register', state.sumRegister);
     setBinaryValue('b-register', state.bRegister);
+    setNumericValue('b-register', state.bRegister);
     setOutputValue(state.outRegister);
     setControlWord(state.controlWord);
     setRam(state.ram);
