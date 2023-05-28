@@ -1,5 +1,5 @@
-bootstrapper
 load different programs
+implement extra instructions
 
 TESTS op code words
 Toggle output register btn
@@ -12,10 +12,7 @@ optimize for phones
 add ui tests
 add prettier
 improve webpack, generate css and html?
-setup ci/cd process using github actions
-host
 unify vocabulary?
-add instruction parser
 add used resources
 add readme
 more sample programs?
