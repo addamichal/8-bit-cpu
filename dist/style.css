@@ -244,6 +244,12 @@ body {
 .line-counter-textarea {
     resize: none;
     border: none;
+    width: 3ch;
+    margin-right: 1ch;
+}
+
+.code {
+    width: 70%;
 }
 
 .bootstrapper-textarea {

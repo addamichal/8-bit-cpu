@@ -22,6 +22,7 @@
                         <span class="blue led"></span>
                     </div>
                     <button title="pulse clock" id="pulseBtn" class="clock-button">PLS</button>
+                    <button title="next instruction" id="nextInstructionBtn" class="clock-button">NXT</button>
                     <input title="clock speed" type="range" min="1" max="5" value="5" class="slider" id="speed">
                     <button title="toggle between manual mode and oscilator mode" id="toggleBtn"
                         class="clock-button">OSC</button>
@@ -120,7 +121,9 @@
                     <div class="flex">
                         <textarea cols="2" class="line-counter-textarea"
                             readonly>00:01:02:03:04:05:06:07:08:09:10:11:12:13:14:15:</textarea>
-                        <textarea rows="16" id="code" class="bootstrapper-textarea" rows="16"></textarea>
+                        <div class="code">
+                            <textarea rows="16" id="code" class="bootstrapper-textarea" rows="16"></textarea>
+                        </div>
                     </div>
                     <label for="program">Select program:</label>
                     <select id="program">

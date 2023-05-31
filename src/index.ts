@@ -1,5 +1,5 @@
 import { assemble } from "./assembler";
-import { getInitState, handleOpcodes } from "./emulator";
+import { getInitState, handleOpcodes, nextInstruction } from "./emulator";
 import { InstructionCode } from "./instructions";
 import { getProgram } from "./program";
 import { ControlWord, State } from "./state";
@@ -15,6 +15,7 @@ document.querySelector('#toggleBtn')?.addEventListener('click', toggle);
 document.querySelector('#pulseBtn')?.addEventListener('mousedown', toggleClock);
 document.querySelector('#pulseBtn')?.addEventListener('mouseup', toggleClock);
 document.querySelector('#resetBtn')?.addEventListener('click', reset);
+document.querySelector('#nextInstructionBtn')?.addEventListener('click', next);
 document.querySelector('#program')?.addEventListener('change', programChanged);
 document.querySelector('#code')?.addEventListener('input', reset);
 
@@ -234,6 +235,19 @@ function reset() {
     run();
 }
 
+function next() {
+    do {
+        state = handleOpcodes(state); // 0 -> 1
+        if (state.halted) break;
+
+        state = handleOpcodes(state); // 1 -> 0
+        if (state.halted) break;
+    }
+    while (state.opcodeCounter !== 4)
+
+    updateUI(state);
+}
+
 function toggleClock() {
     if (state.halted === 1) {
         return;
@@ -250,17 +264,21 @@ function sleep(ms: number) {
 async function toggle() {
     let startBtn = document.querySelector('#toggleBtn');
     let pulseBtn = document.querySelector('#pulseBtn');
+    let nextInstructionBtn = document.querySelector('#nextInstructionBtn');
     if (!startBtn) throw new Error('startBtn not available');
     if (!pulseBtn) throw new Error('pulseBtn not available');
+    if (!nextInstructionBtn) throw new Error('nextInstructionBtn not available');
 
     if (manualMode === 0) {
         startBtn.textContent = 'OSC'
         pulseBtn.removeAttribute('disabled');
+        nextInstructionBtn.removeAttribute('disabled');
         manualMode = 1;
         return;
     }
 
     pulseBtn.setAttribute('disabled', 'disabled');
+    nextInstructionBtn.setAttribute('disabled', 'disabled');
     startBtn.textContent = 'MAN'
     manualMode = 0;
 
