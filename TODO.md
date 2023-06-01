@@ -3,7 +3,7 @@ implement extra instructions
 
 TESTS op code words
 Toggle output register btn
-some debugging options - next instruction, stop, run
+add help
 
 rename op-codes counter correctly based on ben eater's naming convention
 add / generate favicon

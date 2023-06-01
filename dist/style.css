@@ -241,11 +241,18 @@ body {
     margin-left: 10px;
 }
 
-.line-counter-textarea {
-    resize: none;
-    border: none;
+.line-counter {
+    margin-top: 2px;
     width: 3ch;
     margin-right: 1ch;
+    line-height: 1em;
+    font-size: 1em;
+    color: #3333337c;
+}
+
+.active-line {
+    color: #333333;
+
 }
 
 .code {
@@ -255,11 +262,13 @@ body {
 .bootstrapper-textarea {
     width: 100%;
     resize: none;
+    line-height: 1em;
+    font-size: 1em;
 }
 
 .ram div {
     line-height: 1em;
-    margin-bottom: 2.5px;
+    font-size: 1em;
 }
 
 #program {

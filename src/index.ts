@@ -113,6 +113,15 @@ function setSumRegister(value: number, c: number, z: number) {
     setBinaryValue('sum-register', decimalNumber)
 }
 
+function setActiveLine(value: number) {
+    let lines = document.querySelectorAll('.line-counter span');
+    for (let line of lines) {
+        line.classList.remove('active-line');
+
+    }
+    lines[value].classList.add('active-line');
+}
+
 function setRam(ram: number[]) {
     let ramValues = document.querySelectorAll('.ram-value');
     for (let i = 0; i < ram.length; i++) {
@@ -169,6 +178,7 @@ function updateUI(state: State) {
     setNumericValue('b-register', state.bRegister);
     setOutputValue(state.outRegister);
     setControlWord(state.controlWord);
+    setActiveLine(state.counter);
     setRam(state.ram);
 }
 
