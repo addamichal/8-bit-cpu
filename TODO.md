@@ -1,4 +1,10 @@
+Integrate help in the simulation
+Change the repository description
+
+Add universe program
+
 load different programs
+
 implement extra instructions
 
 TESTS op code words
@@ -12,7 +18,5 @@ add ui tests
 add prettier
 improve webpack, generate css and html?
 unify vocabulary?
-add used resources
-add readme
 more sample programs?
 snake or game of life?
