@@ -2,7 +2,7 @@
 Emulator for [Ben Eater's 8-bit computer](https://www.youtube.com/playlist?list=PLowKtXNTBypGqImE405J2565dvjafglHU)
 written in Typescript.
 
-See it live [here](https://addamichal.github.io/8-bit-cpu-emulator/)
+Take a look at [live demo page](https://addamichal.github.io/8-bit-cpu-emulator/)!
 
 ## Supported instructions
 ```
