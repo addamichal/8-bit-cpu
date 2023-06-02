@@ -1,5 +1,6 @@
 Integrate help in the simulation
 Change the repository description
+Add cli badge
 
 Add universe program
 

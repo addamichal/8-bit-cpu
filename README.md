@@ -38,4 +38,4 @@ RST (Reset) button: Resets the simulation
 Can be used to set the RAM of the simulations. Supported instructions are converted into their binary representation and copied to RAM. Unknown / misformated instructions are converted as NOP instructions.
 
 ## Credits
-[Source code for fibonacci program](https://theshamblog.com/programs-and-more-commands-for-the-ben-eater-8-bit-breadboard-computer/)
+[Source code for the Fibonacci program](https://theshamblog.com/programs-and-more-commands-for-the-ben-eater-8-bit-breadboard-computer/)
