@@ -6,17 +6,17 @@ See it live [here](https://addamichal.github.io/8-bit-cpu-emulator/)
 
 ## Supported instructions
 ```
-NOP (0000) + value: No Operation is performed.
-LDA (0001) + value: Loads number from RAM using value as Memory address to A Register.
-ADD (0010) + value: Loads number from RAM using value as Memory address to B Register. Stores the sum of A and B Register to A Register.
-SUB (0011) + value: Loads number from RAM using value as Memory address to B Register. Stores the difference of A and B Register to A Register.
-STA (0100) + value: Stores A Register to RAM using value as Memory Address.
-LDI (0101) + value: Loads value into A Register.
-JMP (0110) + value: Sets counter to value.
-JC 0111 Similar to jump instruction, but gets performed only if Carry flag is set
-JZ 1000 Similar to jump instruction, but gets performed only if the Zero flag is set
-OUT 1110 Copies A Register to Out Register, shows result in the 7 segment display
-HLT 1111 Halts the clock, stops the execution
+(0000) NOP + value: No Operation is performed.
+(0001) LDA + value: Loads number from RAM using value as Memory address to A Register.
+(0010) ADD + value: Loads number from RAM using value as Memory address to B Register. Stores the sum of A and B Register to A Register.
+(0011) SUB + value: Loads number from RAM using value as Memory address to B Register. Stores the difference of A and B Register to A Register.
+(0100) STA + value: Stores A Register to RAM using value as Memory Address.
+(0101) LDI + value: Loads value into A Register.
+(0110) JMP + value: Sets counter to value.
+(0111) JC + value: Similar to jump instruction, but gets performed only if Carry flag is set
+(1000) JZ + value: Similar to jump instruction, but gets performed only if the Zero flag is set
+(1110) OUT: Copies A Register to Out Register, shows result in the 7 segment display
+(1111) HLT: Halts the clock, stops the execution
 ```
 
 ## Flags register
