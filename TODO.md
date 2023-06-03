@@ -1,23 +1,17 @@
 Integrate help in the simulation
-Change the repository description
-Add cli badge
+Toggle output register btn
 
+Add cli badge
 Add universe program
 
-load different programs
+Implement extra instructions
+Tests for op code words
 
-implement extra instructions
-
-TESTS op code words
-Toggle output register btn
-add help
-
-rename op-codes counter correctly based on ben eater's naming convention
+Rename op-codes counter correctly based on ben eater's naming convention
 add / generate favicon
-optimize for phones
-add ui tests
-add prettier
-improve webpack, generate css and html?
-unify vocabulary?
+Optimize for phones
+Add ui tests
+Improve webpack, generate css and html?
+
 more sample programs?
 snake or game of life?
