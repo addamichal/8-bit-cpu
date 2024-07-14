@@ -18,7 +18,12 @@ export function assemble(lines: string[]): number[] {
     if (line === undefined || line === null || line === '') {
       program.push(0);
     } else if (!Number.isNaN(Number.parseInt(line))) {
-      program.push(Number.parseInt(line));
+      let numValue = Number.parseInt(line);
+      if (numValue >= 256) {
+        program.push(0);
+      } else {
+        program.push(numValue);
+      }
     } else {
       try {
         let instruction = parseInstruction(line);

@@ -3,9 +3,11 @@ import { getInitState, handleOpcodes, nextInstruction } from './emulator';
 import { InstructionCode } from './instructions';
 import { getProgram } from './program';
 import { ControlWord, State } from './state';
+import { toSignedByte } from './utils';
 
 let running = 0;
 let manualMode = 1;
+let outputSigned = 0;
 setProgram('Fibonacci');
 let state: State = init();
 let speed = 1;
@@ -18,6 +20,7 @@ document.querySelector('#resetBtn')?.addEventListener('click', reset);
 document.querySelector('#nextInstructionBtn')?.addEventListener('click', next);
 document.querySelector('#program')?.addEventListener('change', programChanged);
 document.querySelector('#code')?.addEventListener('input', reset);
+document.querySelector('#toggleOutputBtn')?.addEventListener('click', toggleOutput);
 
 function setBinaryValue(module: string, number: number) {
   let moduleDiv = document.querySelector(`#${module}`) as HTMLDivElement;
@@ -70,12 +73,16 @@ function setInstructionRegisterValue(number: number) {
 }
 
 function setOutputValue(number: number) {
+  if (outputSigned === 1) {
+    number = toSignedByte(number);
+  }
+
   let sevenSegmentDisplay = document.querySelector('.seven-segment-display');
   if (!sevenSegmentDisplay) throw new Error('Seven Segment Display not found');
 
-  const onesPlace = number % 10;
-  const tensPlace = Math.floor((number / 10) % 10);
-  const hundredsPlace = Math.floor((number / 100) % 10);
+  const onesPlace = Math.abs(number) % 10;
+  const tensPlace = Math.floor((Math.abs(number) / 10) % 10);
+  const hundredsPlace = Math.floor((Math.abs(number) / 100) % 10);
 
   let digits = sevenSegmentDisplay.querySelectorAll(
     '.seven-segment-display-digit'
@@ -333,4 +340,18 @@ async function pulseClock() {
   await sleep(speed / 2);
   toggleClock();
   await sleep(speed / 2);
+}
+
+function toggleOutput() {
+  let toggleBtn = document.querySelector('#toggleOutputBtn');
+  if (toggleBtn === null) throw new Error('toggleOutputBtn not found');
+  if (outputSigned === 0) {
+    outputSigned = 1;
+    toggleBtn.textContent = 'Switch to Unsigned';
+  } else {
+    outputSigned = 0;
+    toggleBtn.textContent = 'Switch to Signed';
+  }
+
+  updateUI(state);
 }
