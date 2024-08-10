@@ -143,8 +143,9 @@ function setRam(ram: number[]) {
   let ramValues = document.querySelectorAll('.ram-value');
   for (let i = 0; i < ram.length; i++) {
     let binaryNumber = ram[i].toString(2).padStart(8, '0');
+    let hexNumber = ram[i].toString(16);
     ramValues[i].textContent =
-      binaryNumber.substring(0, 4) + ' ' + binaryNumber.substring(4);
+      binaryNumber.substring(0, 4) + ' ' + binaryNumber.substring(4) + ' 0x' + hexNumber;
   }
 }
 
